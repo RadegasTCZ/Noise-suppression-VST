@@ -1,0 +1,67 @@
+# Build output folders and build system folders
+Builds/
+Bin/
+build/
+builds/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# JUCE generated code (optional, if you regenerate on each build)
+JuceLibraryCode/
+
+# OS and IDE-specific files
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.vcxproj.user
+*.DS_Store
+*.log
+*.obj
+*.o
+*.pdb
+*.exe
+*.dll
+*.so
+*.a
+*.vst3
+*.vst
+*.component
+*.dylib
+*.ipa
+*.app
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+*.db
+*.cache
+*.ilk
+*.idb
+*.swp
+*.bak
+*.tmp
+*.old
+
+# Xcode project user data
+*.xcworkspace
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# Projucer auto-generated files
+*.jucer~
+
+# Ignore compiled plugin binaries (all formats)
+*.vst3
+*.dll
+*.vst
+*.dylib
+*.component
+
+# Miscellaneous
+ipch/
+.DS_Store
+*.orig
