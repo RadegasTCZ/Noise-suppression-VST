@@ -13,3 +13,11 @@ This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion usi
 
 This code is released under GPLv3 lisense
 See the `LICENSE` file for details.
+
+## VST2 Support Disclaimer
+
+Due to licensing restrictions from Steinberg, the VST2 SDK cannot be distributed with this project.
+Building VST2 versions of this plugin is only possible if you already have the VST2 SDK from a previous license agreement with Steinberg.
+
+No VST2 SDK files are included in this repository, and I cannot provide them.
+VST3, build is fully supported and open source.
