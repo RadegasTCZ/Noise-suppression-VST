@@ -1,6 +1,7 @@
 # Noise-suppression-VST
 
 This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion using SpeexDSP, built with JUCE.
+*My very first project I pubished on GitHub.*
 
 ## Features
  - Realtime noise suppression using open-source SpeexDSP
@@ -31,7 +32,7 @@ Due to licensing restrictions from Steinberg, the VST2 SDK cannot be distributed
 Building VST2 versions of this plugin is only possible if you already have the VST2 SDK from a previous license agreement with Steinberg.
 
 No VST2 SDK files are included in this repository, and I cannot provide them.
-VST3, build is fully supported and open source.
+VST3 build is fully supported and open source.
 
 ## Tools
 This project was made with the help from ChatGPT 4.1 by OpenAI
