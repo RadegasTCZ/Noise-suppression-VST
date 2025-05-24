@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="bXCg4L" name="SpeexDSPNoiseSuppressor" projectType="audioplug"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
+              pluginFormats="buildVST,buildVST3" version="1.0.9" companyName="Xiph.Org Foundation"
+              companyWebsite="https://www.xiph.org/" companyCopyright="2025"
+              pluginManufacturerCode="XIPH" pluginCode="SDSP" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
+              pluginName="SpeexDSP Noise Suppressor" pluginDesc="VST implementation for SpeexDSP Noise Suppresion">
+  <MAINGROUP id="Uci3zJ" name="SpeexDSPNoiseSuppressor">
+    <GROUP id="{D02B286B-8037-1F7A-CAE8-D13548FC00B8}" name="Source">
+      <FILE id="yZyXET" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="rjTcxr" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="ZsMS04" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="Oa3edL" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+    <GROUP id="{00D9FF43-AA9C-6FCA-6C5A-F4B5B92C89B9}" name="ThirdParty">
+      <GROUP id="{A2B53A4F-BAA1-0404-757F-F6661BB0BD76}" name="speexdsp">
+        <GROUP id="{4E725681-A4E1-A386-D652-1083C225491D}" name="speex">
+          <FILE id="TmHGS7" name="config.h" compile="0" resource="0" file="ThirdParty/speexdsp/speex/config.h"/>
+          <FILE id="KFjPDY" name="Makefile.am" compile="0" resource="1" file="ThirdParty/speexdsp/speex/Makefile.am"/>
+          <FILE id="Jjn1jV" name="speex_buffer.h" compile="0" resource="0" file="ThirdParty/speexdsp/speex/speex_buffer.h"/>
+          <FILE id="NR059v" name="speex_echo.h" compile="0" resource="0" file="ThirdParty/speexdsp/speex/speex_echo.h"/>
+          <FILE id="MDYgSj" name="speex_jitter.h" compile="0" resource="0" file="ThirdParty/speexdsp/speex/speex_jitter.h"/>
+          <FILE id="x0yezz" name="speex_preprocess.h" compile="0" resource="0"
+                file="ThirdParty/speexdsp/speex/speex_preprocess.h"/>
+          <FILE id="WGXAu3" name="speex_resampler.h" compile="0" resource="0"
+                file="ThirdParty/speexdsp/speex/speex_resampler.h"/>
+          <FILE id="UXf4yL" name="speexdsp_config_types.h.in" compile="0" resource="1"
+                file="ThirdParty/speexdsp/speex/speexdsp_config_types.h.in"/>
+          <FILE id="Uc9TqI" name="speexdsp_types.h" compile="0" resource="0"
+                file="ThirdParty/speexdsp/speex/speexdsp_types.h"/>
+        </GROUP>
+        <FILE id="bB6N8D" name="_kiss_fft_guts.h" compile="0" resource="0"
+              file="ThirdParty/speexdsp/_kiss_fft_guts.h"/>
+        <FILE id="xIlMOU" name="arch.h" compile="0" resource="0" file="ThirdParty/speexdsp/arch.h"/>
+        <FILE id="CtjijD" name="bfin.h" compile="0" resource="0" file="ThirdParty/speexdsp/bfin.h"/>
+        <FILE id="Qgkomr" name="buffer.c" compile="1" resource="0" file="ThirdParty/speexdsp/buffer.c"/>
+        <FILE id="yoNtnH" name="config.h" compile="0" resource="0" file="ThirdParty/speexdsp/config.h"/>
+        <FILE id="XAlZNe" name="fftwrap.c" compile="1" resource="0" file="ThirdParty/speexdsp/fftwrap.c"/>
+        <FILE id="NZ0UWH" name="fftwrap.h" compile="0" resource="0" file="ThirdParty/speexdsp/fftwrap.h"/>
+        <FILE id="DNJwlc" name="filterbank.c" compile="1" resource="0" file="ThirdParty/speexdsp/filterbank.c"/>
+        <FILE id="AqiKsk" name="filterbank.h" compile="0" resource="0" file="ThirdParty/speexdsp/filterbank.h"/>
+        <FILE id="uLSVSV" name="fixed_arm4.h" compile="0" resource="0" file="ThirdParty/speexdsp/fixed_arm4.h"/>
+        <FILE id="soivN1" name="fixed_arm5e.h" compile="0" resource="0" file="ThirdParty/speexdsp/fixed_arm5e.h"/>
+        <FILE id="DOCS4M" name="fixed_bfin.h" compile="0" resource="0" file="ThirdParty/speexdsp/fixed_bfin.h"/>
+        <FILE id="IFYAcT" name="fixed_debug.h" compile="0" resource="0" file="ThirdParty/speexdsp/fixed_debug.h"/>
+        <FILE id="q4zjvC" name="fixed_generic.h" compile="0" resource="0" file="ThirdParty/speexdsp/fixed_generic.h"/>
+        <FILE id="XLo5Qq" name="jitter.c" compile="1" resource="0" file="ThirdParty/speexdsp/jitter.c"/>
+        <FILE id="A5iggB" name="kiss_fft.c" compile="1" resource="0" file="ThirdParty/speexdsp/kiss_fft.c"/>
+        <FILE id="aLaJQR" name="kiss_fft.h" compile="0" resource="0" file="ThirdParty/speexdsp/kiss_fft.h"/>
+        <FILE id="CxQD5S" name="kiss_fftr.c" compile="1" resource="0" file="ThirdParty/speexdsp/kiss_fftr.c"/>
+        <FILE id="sdOi0t" name="kiss_fftr.h" compile="0" resource="0" file="ThirdParty/speexdsp/kiss_fftr.h"/>
+        <FILE id="O6ERtX" name="Makefile.am" compile="0" resource="1" file="ThirdParty/speexdsp/Makefile.am"/>
+        <FILE id="cxDQ9r" name="math_approx.h" compile="0" resource="0" file="ThirdParty/speexdsp/math_approx.h"/>
+        <FILE id="lN12tZ" name="mdf.c" compile="1" resource="0" file="ThirdParty/speexdsp/mdf.c"/>
+        <FILE id="NlaCNA" name="misc_bfin.h" compile="0" resource="0" file="ThirdParty/speexdsp/misc_bfin.h"/>
+        <FILE id="lg61bY" name="os_support.h" compile="0" resource="0" file="ThirdParty/speexdsp/os_support.h"/>
+        <FILE id="kInzBC" name="preprocess.c" compile="1" resource="0" file="ThirdParty/speexdsp/preprocess.c"/>
+        <FILE id="fmulTc" name="pseudofloat.h" compile="0" resource="0" file="ThirdParty/speexdsp/pseudofloat.h"/>
+        <FILE id="f7NxxC" name="resample.c" compile="1" resource="0" file="ThirdParty/speexdsp/resample.c"/>
+        <FILE id="pGVA4j" name="resample_neon.h" compile="0" resource="0" file="ThirdParty/speexdsp/resample_neon.h"/>
+        <FILE id="O7nZtT" name="resample_sse.h" compile="0" resource="0" file="ThirdParty/speexdsp/resample_sse.h"/>
+        <FILE id="JNwAVS" name="scal.c" compile="1" resource="0" file="ThirdParty/speexdsp/scal.c"/>
+        <FILE id="x2dWVf" name="smallft.c" compile="1" resource="0" file="ThirdParty/speexdsp/smallft.c"/>
+        <FILE id="tK0HDe" name="smallft.h" compile="0" resource="0" file="ThirdParty/speexdsp/smallft.h"/>
+        <FILE id="yCz5g8" name="testdenoise.c" compile="1" resource="0" file="ThirdParty/speexdsp/testdenoise.c"/>
+        <FILE id="J36ZBG" name="testecho.c" compile="1" resource="0" file="ThirdParty/speexdsp/testecho.c"/>
+        <FILE id="xeO8cQ" name="testjitter.c" compile="1" resource="0" file="ThirdParty/speexdsp/testjitter.c"/>
+        <FILE id="ssSAa8" name="testresample.c" compile="1" resource="0" file="ThirdParty/speexdsp/testresample.c"/>
+        <FILE id="jYhKHx" name="testresample2.c" compile="0" resource="0" file="ThirdParty/speexdsp/testresample2.c"/>
+        <FILE id="nrtyu8" name="vorbis_psy.h" compile="0" resource="0" file="ThirdParty/speexdsp/vorbis_psy.h"/>
+        <FILE id="n7Ukl2" name="speex_config_win.h" compile="0" resource="0"
+              file="ThirdParty/speexdsp/speex_config_win.h"/>
+      </GROUP>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SpeexDSPNoiseSuppressor_debug"
+                       binaryPath="C:\SpeexDSP_VST\SpeexDSPNoiseSuppressor\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
+                       defines="M_PI=3.14159265358979323846&#10;"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SpeexDSPNoiseSuppressor_release"
+                       binaryPath="C:\SpeexDSP_VST\SpeexDSPNoiseSuppressor\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
+                       defines="M_PI=3.14159265358979323846&#10;"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+</JUCERPROJECT>
