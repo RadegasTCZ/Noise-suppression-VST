@@ -21,3 +21,6 @@ Building VST2 versions of this plugin is only possible if you already have the V
 
 No VST2 SDK files are included in this repository, and I cannot provide them.
 VST3, build is fully supported and open source.
+
+## Tools
+This project was made with the help from ChatGPT 4.1 by OpenAI
