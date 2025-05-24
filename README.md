@@ -7,6 +7,17 @@ This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion usi
  - Works at most common host sample rates
  - Compatible with all major DAWs and audio hosts (Tested with Audacity, OBS Studio and Equalizer APO)
 
+## Building the Plugin
+
+To build the plugin:
+
+1. Open `SpeexDSPNoiseSuppressor.jucer` with JUCE's Projucer.
+2. Configure your desired exporter (e.g., Visual Studio, Xcode).
+3. Save and open the project in your chosen IDE.
+4. Build the project to generate the plugin binaries.
+
+*Note: I was working with path C:\SpeexDSP_VST where Projucer, my VST2 SDK longside the project folder is located*
+
 ## Credits & Licenses
 - This plugin uses [SpeexDSP](https://github.com/xiph/speexdsp) © Xiph.Org Foundation (BSD-3-Clause).
 - Built with [JUCE](https://juce.com), subject to its license.
