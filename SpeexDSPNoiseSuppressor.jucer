@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="bXCg4L" name="SpeexDSPNoiseSuppressor" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
-              pluginFormats="buildVST,buildVST3" version="1.0.9" companyName="Xiph.Org Foundation"
+              pluginFormats="buildVST,buildVST3" version="1.0.10" companyName="Xiph.Org Foundation"
               companyWebsite="https://www.xiph.org/" companyCopyright="2025"
               pluginManufacturerCode="XIPH" pluginCode="SDSP" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
               pluginName="SpeexDSP Noise Suppressor" pluginDesc="VST implementation for SpeexDSP Noise Suppresion">
