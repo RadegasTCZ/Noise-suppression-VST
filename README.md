@@ -1,6 +1,7 @@
 # Noise-suppression-VST
 
 *My very first project I pubished on GitHub.*
+
 This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion using SpeexDSP, built with JUCE.
 
 ## Preview
