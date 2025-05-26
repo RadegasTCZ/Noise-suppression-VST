@@ -97,10 +97,10 @@
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="SpeexDSPNoiseSuppressor_debug"
-                       binaryPath="C:\SpeexDSP_VST\SpeexDSPNoiseSuppressor\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
+                       binaryPath="$(PROJECTDIR)\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
                        defines="M_PI=3.14159265358979323846&#10;"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="SpeexDSPNoiseSuppressor_release"
-                       binaryPath="C:\SpeexDSP_VST\SpeexDSPNoiseSuppressor\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
+                       binaryPath="$(PROJECTDIR)\Bin" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
                        defines="M_PI=3.14159265358979323846&#10;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
