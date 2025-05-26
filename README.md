@@ -3,6 +3,10 @@
 This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion using SpeexDSP, built with JUCE.
 *My very first project I pubished on GitHub.*
 
+## Preview
+
+![image](https://github.com/user-attachments/assets/b9e4efab-1d4e-4d52-8755-e74ffb43d305)
+
 ## Features
  - Realtime noise suppression using open-source SpeexDSP
  - Works at most common host sample rates
