@@ -40,7 +40,7 @@ public:
 
     juce::AudioProcessorValueTreeState apvts;
     
-    SpeexPreprocessState* speexStates[2] = { nullptr, nullptr };
+    SpeexPreprocessState* speexStates[2];
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
