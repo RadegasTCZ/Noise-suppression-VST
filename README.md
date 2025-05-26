@@ -1,7 +1,7 @@
 # Noise-suppression-VST
 
-This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion using SpeexDSP, built with JUCE.
 *My very first project I pubished on GitHub.*
+This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion using SpeexDSP, built with JUCE.
 
 ## Preview
 
@@ -14,14 +14,7 @@ This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion usi
 
 ## Building the Plugin
 
-To build the plugin:
-
-1. Open `SpeexDSPNoiseSuppressor.jucer` with JUCE's Projucer.
-2. Configure your desired exporter (e.g., Visual Studio, Xcode).
-3. Save and open the project in your chosen IDE.
-4. Build the project to generate the plugin binaries.
-
-*Note: I was working with path C:\SpeexDSP_VST where Projucer, my VST2 SDK longside the project folder is located*
+*Planned to make a wiki on how to prepare, open and compile the project.*
 
 ## Credits & Licenses
 - This plugin uses [SpeexDSP](https://github.com/xiph/speexdsp) © Xiph.Org Foundation (BSD-3-Clause).
