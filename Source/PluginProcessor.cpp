@@ -43,7 +43,7 @@ float SpeexDSPNoiseSuppressorAudioProcessor::getProbContinue() const {
 
 void SpeexDSPNoiseSuppressorAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    const double frameDurationMs = 10.0; // You can adjust this (Speex default is 10 ms)
+	const double frameDurationMs = 20.0; // Set your desired frame duration in milliseconds, 20ms is the default for Speex.
     speexFrameSize = static_cast<int>(sampleRate * frameDurationMs / 1000.0);
 
     for (int ch = 0; ch < 2; ++ch)
