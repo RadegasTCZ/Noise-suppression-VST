@@ -15,7 +15,7 @@ This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion usi
 
 ## Building the Plugin
 
-*Planned to make a wiki on how to prepare, open and compile the project.*
+*Please see the Wiki sections of this repository for full build instructions.*
 
 ## Credits & Licenses
 - This plugin uses [SpeexDSP](https://github.com/xiph/speexdsp) © Xiph.Org Foundation (BSD-3-Clause).
