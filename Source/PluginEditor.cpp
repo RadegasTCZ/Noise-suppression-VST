@@ -4,7 +4,10 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     : AudioProcessorEditor (&p), processor (p)
 {
     addAndMakeVisible(enableDenoiseButton);
-    enableDenoiseButton.setButtonText("Enable noise suppression");
+    enableDenoiseButton.setButtonText("Enable Noise Suppression");
+
+    addAndMakeVisible(enableVADButton);
+    enableVADButton.setButtonText("Enable Voice Activation Detection");
 
     addAndMakeVisible(suppressionLabel);
     suppressionLabel.setText("Noise suppression level:", juce::dontSendNotification);
@@ -40,27 +43,28 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     addAndMakeVisible(versionLabel);
     versionLabel.setText("Version: " JucePlugin_VersionString, juce::dontSendNotification);
 
+    enableDenoiseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
+        processor.apvts, "enableDenoise", enableDenoiseButton);
+    enableVADAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
+        processor.apvts, "enableVAD", enableVADButton);
     noiseSuppressAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processor.apvts, "noisesuppress", noiseSuppressSlider);
     probStartAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processor.apvts, "probstart", probStartSlider);
     probContinueAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processor.apvts, "probcontinue", probContinueSlider);
-    enableDenoiseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processor.apvts, "enableDenoise", enableDenoiseButton);
 
     const int margin = 16;
+    const int buttonHeight = 16;
     const int labelHeight = 18;
     const int sliderHeight = 32;
     const int sliderSpacing = 10;
 
     const int numSliderGroups = 4;
-    const int totalHeight = margin +
-        numSliderGroups * (labelHeight + sliderHeight + sliderSpacing) +
-        margin;
+    const int numButtons = 2;
+    const int totalHeight = margin + (numButtons * (buttonHeight)) + margin + (numSliderGroups * (labelHeight + sliderHeight + sliderSpacing)) + margin;
 
     setSize(400, totalHeight);
-
 }
 
 SpeexDSPNoiseSuppressorAudioProcessorEditor::~SpeexDSPNoiseSuppressorAudioProcessorEditor() {}
@@ -82,6 +86,8 @@ void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
 
     enableDenoiseButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
     y += buttonHeight + sliderSpacing;
+    enableVADButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
+    y += buttonHeight + sliderSpacing + margin;
     suppressionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
     y += labelHeight + 2;
     noiseSuppressSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
@@ -93,6 +99,6 @@ void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
     adoptionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
     y += labelHeight + 2;
     probContinueSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += labelHeight + 2;
+    y += labelHeight + 2 + margin;
     versionLabel.setBounds(10, getHeight() - 24, 120, 20);
 }

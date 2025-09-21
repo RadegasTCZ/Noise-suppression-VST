@@ -1,5 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
+#include <deque>
 
 extern "C" {
     #include "../ThirdParty/speexdsp/speex/speex_preprocess.h"
@@ -33,19 +34,30 @@ public:
     void setStateInformation(const void*, int) override;
 
     // Parameter accessors
+    bool getEnableDenoise() const;
+    bool getEnableVAD() const;
     float getNoiseSuppress() const;
     float getProbStart() const;
     float getProbContinue() const;
-    bool getEnableDenoise() const { return apvts.getRawParameterValue("enableDenoise")->load() > 0.5f; }
+
+    // ---- Soft gate state ----
+    float gateGain[2] = { 1.0f, 1.0f }; // per-channel smoothed gain
+    float gateFloor = 0.1f; // drop audio to -20 dB when VAD says "no speech"
+    float gateAttack = 0.0f; // computed from sample rate
+    float gateRelease = 0.0f; // computed from sample rate
 
     juce::AudioProcessorValueTreeState apvts;
-    
     SpeexPreprocessState* speexStates[2];
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     int speexFrameSize = 480; // default value; will be set in prepareToPlay
-    std::vector<float> channelInputBuffers[2];  // For input buffering
-    std::vector<float> channelOutputFIFOs[2];   // For output draining
+
+    // Input/Output buffers (deque for O(1) pop_front)
+    std::deque<float> channelInputBuffers[2];
+    std::deque<float> channelOutputFIFOs[2];
+
+    // Reusable per-channel int16 frame (avoid per-frame allocations)
+    std::vector<spx_int16_t> frameI16[2];
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SpeexDSPNoiseSuppressorAudioProcessor)
 };

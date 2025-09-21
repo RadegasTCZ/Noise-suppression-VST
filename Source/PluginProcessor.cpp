@@ -20,17 +20,25 @@ SpeexDSPNoiseSuppressorAudioProcessor::~SpeexDSPNoiseSuppressorAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout SpeexDSPNoiseSuppressorAudioProcessor::createParameterLayout()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-    params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "noisesuppress", "Noise Suppress (dB)", juce::NormalisableRange<float>(-40.0f, -5.0f, 1.0f, 1.0f, true), -30.0f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "probstart", "Noise Learn Aggressiveness", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.60f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "probcontinue", "Noise Adaptation Rate", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.95f));
     params.push_back(std::make_unique<juce::AudioParameterBool>(
         "enableDenoise", "Enable Noise Suppression", true));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(
+        "enableVAD", "Enable Noise Suppression", true));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "noisesuppress", "Noise Suppress (dB)", juce::NormalisableRange<float>(-40.0f, -5.0f, 1.0f, 1.0f, true), -20.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "probstart", "Noise Learn Aggressiveness", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.70f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "probcontinue", "Noise Adaptation Rate", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.7f));
     return { params.begin(), params.end() };
 }
 
+bool SpeexDSPNoiseSuppressorAudioProcessor::getEnableDenoise() const {
+    return apvts.getRawParameterValue("enableDenoise")->load() > 0.5f;
+}
+bool SpeexDSPNoiseSuppressorAudioProcessor::getEnableVAD() const {
+    return apvts.getRawParameterValue("enableVAD")->load() > 0.5f;
+}
 float SpeexDSPNoiseSuppressorAudioProcessor::getNoiseSuppress() const {
     return apvts.getRawParameterValue("noisesuppress")->load();
 }
@@ -44,27 +52,46 @@ float SpeexDSPNoiseSuppressorAudioProcessor::getProbContinue() const {
 void SpeexDSPNoiseSuppressorAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	const double frameDurationMs = 20.0; // Set your desired frame duration in milliseconds, 20ms is the default for Speex.
-    speexFrameSize = static_cast<int>(sampleRate * frameDurationMs / 1000.0);
+    speexFrameSize = (int)(sampleRate * frameDurationMs / 1000.0);
+
+    // Gate smoothing: 2 ms attack, 80 ms release
+    const float attackMs = 2.0f;
+    const float releaseMs = 80.0f;
+    gateAttack = 1.0f - std::exp(-1.0f / (attackMs * 0.001f * (float)sampleRate));
+    gateRelease = 1.0f - std::exp(-1.0f / (releaseMs * 0.001f * (float)sampleRate));
 
     for (int ch = 0; ch < 2; ++ch)
     {
         channelInputBuffers[ch].clear();
         channelOutputFIFOs[ch].clear();
-        if (speexStates[ch])
-            speex_preprocess_state_destroy(speexStates[ch]);
+        if (speexStates[ch]) speex_preprocess_state_destroy(speexStates[ch]);
         speexStates[ch] = speex_preprocess_state_init(speexFrameSize, (int)sampleRate);
 
-        float noiseSuppress = getNoiseSuppress();
-        float probStart = getProbStart();
-        float probContinue = getProbContinue();
-        int noiseSuppressInt = static_cast<int>(noiseSuppress);
+        // fetch input params
+        int enableVAD = getEnableVAD() ? 1 : 0;
         int enableDenoise = getEnableDenoise() ? 1 : 0;
+        float noiseSuppress = getNoiseSuppress();
+        float probStart     = getProbStart();
+        float probContinue  = getProbContinue();
+        int noiseSuppressInt = (int)noiseSuppress;
 
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_VAD, &enableVAD);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noiseSuppressInt);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStart);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinue);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
+
+
+        // pre-fill output FIFO with one frame of zeros (pre-buffer)
+        channelOutputFIFOs[ch].assign((size_t)speexFrameSize, 0.0f);
+
+        // allocate reusable int16 frame
+        frameI16[ch].assign((size_t)speexFrameSize, 0);
+
+        gateGain[ch] = 1.0f; // reset
     }
+    // Tell the host about the exact processing latency (1 frame = 20 ms)
+    setLatencySamples(speexFrameSize);
 }
 
 void SpeexDSPNoiseSuppressorAudioProcessor::releaseResources()
@@ -81,21 +108,24 @@ void SpeexDSPNoiseSuppressorAudioProcessor::releaseResources()
 
 void SpeexDSPNoiseSuppressorAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
+    juce::ScopedNoDenormals noDenormals;
     const int numChannels = juce::jmin(2, buffer.getNumChannels());
     const int numSamples = buffer.getNumSamples();
 
     for (int ch = 0; ch < numChannels; ++ch)
     {
+        int enableVAD = getEnableVAD() ? 1 : 0;
+        int enableDenoise = getEnableDenoise() ? 1 : 0;
         float noiseSuppress = getNoiseSuppress();
         float probStart = getProbStart();
         float probContinue = getProbContinue();
-        int noiseSuppressInt = static_cast<int>(noiseSuppress);
-        int enableDenoise = getEnableDenoise() ? 1 : 0;
+        int noiseSuppressInt = (int)noiseSuppress;
 
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_VAD, &enableVAD);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noiseSuppressInt);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStart);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinue);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
     }
 
     for (int ch = 0; ch < numChannels; ++ch)
@@ -103,38 +133,63 @@ void SpeexDSPNoiseSuppressorAudioProcessor::processBlock(juce::AudioBuffer<float
         float* channelData = buffer.getWritePointer(ch);
         const float* inputData = buffer.getReadPointer(ch);
 
-        // 1. Append all input samples to the input buffer
-        channelInputBuffers[ch].insert(channelInputBuffers[ch].end(), inputData, inputData + numSamples);
+        // 1) Append input to deque
+        for (int j = 0; j < numSamples; ++j)
+            channelInputBuffers[ch].push_back(inputData[j]);
 
-        // 2. While we have enough input for a full frame, process it
-        while (channelInputBuffers[ch].size() >= (size_t)speexFrameSize)
+        // 2) While we have a full frame, process it
+        while ((int)channelInputBuffers[ch].size() >= speexFrameSize)
         {
-            std::vector<spx_int16_t> frame(speexFrameSize);
+            // Reuse preallocated frameI16
+            auto& frm = frameI16[ch]; // vector<spx_int16_t>
+
+            // Convert float -> int16
             for (int j = 0; j < speexFrameSize; ++j)
-                frame[j] = static_cast<spx_int16_t>(juce::jlimit(-32768, 32767,
-                    static_cast<int>(channelInputBuffers[ch][j] * 32768.0f)));
+            {
+                const float s = channelInputBuffers[ch][(size_t)j];
+                frm[(size_t)j] = (spx_int16_t)juce::jlimit(-32768, 32767, (int)std::lrintf(s * 32768.0f));
+            }
 
-            speex_preprocess_run(speexStates[ch], frame.data());
+            int isSpeech = speex_preprocess_run(speexStates[ch], frm.data());
 
-            // Append processed frame to the output FIFO
+            // RMS level check safety
+            float rms = 0.0f;
+            for (int j = 0; j < speexFrameSize; ++j) {
+                float v = (float)frm[(size_t)j] / 32768.0f;
+                rms += v * v;
+            }
+            rms = std::sqrt(rms / (float)speexFrameSize);
+            if (!isSpeech && rms > 0.01f)  // set RMS level to -40 dBFS
+                isSpeech = 1;
+
+            // VAD-driven soft gate
+            float target = isSpeech ? 1.0f : gateFloor;
+            float& g = gateGain[ch];
+            float  coef = (target > g) ? gateAttack : gateRelease;
+
             for (int j = 0; j < speexFrameSize; ++j)
-                channelOutputFIFOs[ch].push_back(frame[j] / 32768.0f);
+            {
+                g += coef * (target - g);
+                float f = (float)frm[(size_t)j] / 32768.0f;
+                channelOutputFIFOs[ch].push_back(f * g);
+            }
 
-            // Remove processed samples from input buffer
-            channelInputBuffers[ch].erase(channelInputBuffers[ch].begin(), channelInputBuffers[ch].begin() + speexFrameSize);
+            // Remove processed samples from input deque (fast)
+            for (int j = 0; j < speexFrameSize; ++j)
+            channelInputBuffers[ch].pop_front();
         }
 
-        // 3. Now, drain exactly numSamples from the output FIFO to channelData
+        // 3) Drain exactly numSamples to output
         int samplesWritten = 0;
         while (samplesWritten < numSamples && !channelOutputFIFOs[ch].empty())
         {
             channelData[samplesWritten++] = channelOutputFIFOs[ch].front();
-            channelOutputFIFOs[ch].erase(channelOutputFIFOs[ch].begin());
+            channelOutputFIFOs[ch].pop_front();
         }
 
-        // 4. If we run out of processed samples, output DRY input for the remainder of this block
+        // 4) Zero-pad remainder (should be rare)
         while (samplesWritten < numSamples)
-            channelData[samplesWritten++] = inputData[samplesWritten - 1];
+            channelData[samplesWritten++] = 0.0f;
     }
 }
 

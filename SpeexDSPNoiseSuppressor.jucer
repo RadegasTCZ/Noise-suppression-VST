@@ -2,10 +2,10 @@
 
 <JUCERPROJECT id="bXCg4L" name="SpeexDSPNoiseSuppressor" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
-              pluginFormats="buildVST,buildVST3" version="1.0.11" companyName="Xiph.Org Foundation"
+              pluginFormats="buildVST,buildVST3" version="1.1.0" companyName="Xiph.Org Foundation"
               companyWebsite="https://www.xiph.org/" companyCopyright="2025"
               pluginManufacturerCode="XIPH" pluginCode="SDSP" headerPath="$(PROJECTDIR)\ThirdParty\speexdsp"
-              pluginName="SpeexDSP Noise Suppressor" pluginDesc="VST implementation for SpeexDSP Noise Suppresion">
+              pluginName="SpeexDSP Noise Suppression Plugin v1.1.0" pluginDesc="VST implementation for SpeexDSP Noise Suppresion library">
   <MAINGROUP id="Uci3zJ" name="SpeexDSPNoiseSuppressor">
     <GROUP id="{D02B286B-8037-1F7A-CAE8-D13548FC00B8}" name="Source">
       <FILE id="yZyXET" name="PluginProcessor.cpp" compile="1" resource="0"
