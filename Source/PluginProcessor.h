@@ -39,12 +39,17 @@ public:
     float getNoiseSuppress() const;
     float getProbStart() const;
     float getProbContinue() const;
+    float getVadThresholdDb() const;
+    float getGateFloorDb() const;
+    float getGateAttackMs() const;
+    float getGateReleaseMs() const;
 
     // ---- Soft gate state ----
     float gateGain[2] = { 1.0f, 1.0f }; // per-channel smoothed gain
-    float gateFloor = 0.1f; // drop audio to -20 dB when VAD says "no speech"
     float gateAttack = 0.0f; // computed from sample rate
     float gateRelease = 0.0f; // computed from sample rate
+    float prevAttackMs = -1.0f;
+    float prevReleaseMs = -1.0f;
 
     juce::AudioProcessorValueTreeState apvts;
     SpeexPreprocessState* speexStates[2];

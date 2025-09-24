@@ -26,8 +26,9 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
 
     addAndMakeVisible(probStartSlider);
     probStartSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    probStartSlider.setRange(0.5, 1.0, 0.01);
-    probStartSlider.setNumDecimalPlacesToDisplay(2);
+    probStartSlider.setRange(50, 100, 1);
+    probStartSlider.setTextValueSuffix("%");
+    probStartSlider.setNumDecimalPlacesToDisplay(0);
     probStartSlider.setTooltip("How much to trust the start as noise");
 
     addAndMakeVisible(adoptionLabel);
@@ -36,9 +37,58 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
 
     addAndMakeVisible(probContinueSlider);
     probContinueSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    probContinueSlider.setRange(0.5, 1.0, 0.01);
-    probContinueSlider.setNumDecimalPlacesToDisplay(2);
+    probContinueSlider.setRange(50, 100, 1);
+    probContinueSlider.setTextValueSuffix("%");
+    probContinueSlider.setNumDecimalPlacesToDisplay(0);
     probContinueSlider.setTooltip("How quickly noise adapts to changes");
+
+    addAndMakeVisible(vadThresholdLabel);
+    vadThresholdLabel.setText("VAD RMS Threshold level:", juce::dontSendNotification);
+    vadThresholdLabel.setJustificationType(juce::Justification::centredLeft);
+
+    addAndMakeVisible(vadThresholdSlider);
+    vadThresholdSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    vadThresholdSlider.setRange(-60, -15, 1.0);
+    vadThresholdSlider.setTextValueSuffix(" dBFS");
+    vadThresholdSlider.setNumDecimalPlacesToDisplay(0);
+    vadThresholdSlider.setTooltip("Set the VAD threshold level to clamp down on residual noise");
+
+    addAndMakeVisible(gateFloorLabel);
+    gateFloorLabel.setText("Gate floor:", juce::dontSendNotification);
+    gateFloorLabel.setJustificationType(juce::Justification::centredLeft);
+
+    addAndMakeVisible(gateFloorSlider);
+    gateFloorSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    gateFloorSlider.setRange(-60.0, -5.0, 1.0);
+    gateFloorSlider.setTextValueSuffix(" dB");
+    gateFloorSlider.setNumDecimalPlacesToDisplay(0);
+    gateFloorSlider.setTooltip("Reduction applied when no speech is detected");
+
+    addAndMakeVisible(gateAttackLabel);
+    gateAttackLabel.setText("Gate attack (ms):", juce::dontSendNotification);
+    gateAttackLabel.setJustificationType(juce::Justification::centredLeft);
+
+    addAndMakeVisible(gateAttackSlider);
+    gateAttackSlider.setSliderStyle(juce::Slider::IncDecButtons);
+    gateAttackSlider.setRange(1.0, 10.0, 0.5);
+    gateAttackSlider.setNumDecimalPlacesToDisplay(1);
+    gateAttackSlider.setTextValueSuffix(" ms");
+    gateAttackSlider.setTooltip("Smoothing attack (1–10 ms)");
+    gateAttackSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 60, 28);
+    gateAttackSlider.setIncDecButtonsMode(juce::Slider::incDecButtonsDraggable_AutoDirection);
+
+    addAndMakeVisible(gateReleaseLabel);
+    gateReleaseLabel.setText("Gate release (ms):", juce::dontSendNotification);
+    gateReleaseLabel.setJustificationType(juce::Justification::centredLeft);
+
+    addAndMakeVisible(gateReleaseSlider);
+    gateReleaseSlider.setSliderStyle(juce::Slider::IncDecButtons);
+    gateReleaseSlider.setRange(10.0, 1000.0, 5.0);
+    gateReleaseSlider.setNumDecimalPlacesToDisplay(0);
+    gateReleaseSlider.setTextValueSuffix(" ms");
+    gateReleaseSlider.setTooltip("Smoothing release (10–1000 ms)");
+    gateReleaseSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 60, 28);
+    gateReleaseSlider.setIncDecButtonsMode(juce::Slider::incDecButtonsDraggable_AutoDirection);
 
     addAndMakeVisible(versionLabel);
     versionLabel.setText("Version: " JucePlugin_VersionString, juce::dontSendNotification);
@@ -53,17 +103,23 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
         processor.apvts, "probstart", probStartSlider);
     probContinueAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processor.apvts, "probcontinue", probContinueSlider);
+    vadThresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processor.apvts, "vadThreshold", vadThresholdSlider);
+    gateFloorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processor.apvts, "gateFloor", gateFloorSlider);
+    gateAttackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processor.apvts, "gateAttackMs", gateAttackSlider);
+    gateReleaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processor.apvts, "gateReleaseMs", gateReleaseSlider);
 
     const int margin = 16;
     const int buttonHeight = 16;
     const int labelHeight = 18;
     const int sliderHeight = 32;
     const int sliderSpacing = 10;
-
-    const int numSliderGroups = 4;
     const int numButtons = 2;
+    const int numSliderGroups = 7;
     const int totalHeight = margin + (numButtons * (buttonHeight)) + margin + (numSliderGroups * (labelHeight + sliderHeight + sliderSpacing)) + margin;
-
     setSize(400, totalHeight);
 }
 
@@ -76,12 +132,12 @@ void SpeexDSPNoiseSuppressorAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
 {
-
     int margin = 16;
     int labelHeight = 18;
     int sliderHeight = 32;
     int buttonHeight = 24;
     int sliderSpacing = 10;
+    int halfWidth = (getWidth() - 3 * margin) / 2;
     int y = margin;
 
     enableDenoiseButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
@@ -99,6 +155,20 @@ void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
     adoptionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
     y += labelHeight + 2;
     probContinueSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
+    y += sliderHeight + sliderSpacing;
+    vadThresholdLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
+    y += labelHeight + 2;
+    vadThresholdSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
+    y += sliderHeight + sliderSpacing;
+    gateFloorLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
+    y += labelHeight + 2;
+    gateFloorSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
+    y += sliderHeight + sliderSpacing;
+    gateAttackLabel.setBounds(margin, y, halfWidth, labelHeight);
+    gateReleaseLabel.setBounds(margin + halfWidth + margin, y, halfWidth, labelHeight);
+    y += labelHeight + 4;
+    gateAttackSlider.setBounds(margin, y, halfWidth, sliderHeight);
+    gateReleaseSlider.setBounds(margin + halfWidth + margin, y, halfWidth, sliderHeight);
     y += labelHeight + 2 + margin;
     versionLabel.setBounds(10, getHeight() - 24, 120, 20);
 }

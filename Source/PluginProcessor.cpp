@@ -23,13 +23,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpeexDSPNoiseSuppressorAudio
     params.push_back(std::make_unique<juce::AudioParameterBool>(
         "enableDenoise", "Enable Noise Suppression", true));
     params.push_back(std::make_unique<juce::AudioParameterBool>(
-        "enableVAD", "Enable Noise Suppression", true));
+        "enableVAD", "Enable Voice Activation Detection", true));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         "noisesuppress", "Noise Suppress (dB)", juce::NormalisableRange<float>(-40.0f, -5.0f, 1.0f, 1.0f, true), -20.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "probstart", "Noise Learn Aggressiveness", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.70f));
+        "probstart", "Noise Learn Aggressiveness", juce::NormalisableRange<float>(50.0f, 100.0f, 1.0f, 1.0f, true), 70.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "probcontinue", "Noise Adaptation Rate", juce::NormalisableRange<float>(0.5f, 1.0f, 0.01f, 1.0f, true), 0.7f));
+        "probcontinue", "Noise Adaptation Rate", juce::NormalisableRange<float>(50.0f, 100.0f, 1.0f, 1.0f, true), 70.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "vadThreshold", "VAD RMS Threshold (dBFS)", juce::NormalisableRange<float>(-60.0f, -15.0f, 1.0f, 1.0f, true), -40.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "gateFloor", "Gate Floor (dB)", juce::NormalisableRange<float>(-60.0f, -5.0f, 1.0f, 1.0f, true), -20.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "gateAttackMs", "Gate Attack (ms)", juce::NormalisableRange<float>(1.0f, 10.0f, 0.5f, 1.0f, true), 2.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "gateReleaseMs", "Gate Release (ms)", juce::NormalisableRange<float>(10.0f, 1000.0f, 5.0f, 1.0f, true), 80.0f));
     return { params.begin(), params.end() };
 }
 
@@ -48,17 +56,30 @@ float SpeexDSPNoiseSuppressorAudioProcessor::getProbStart() const {
 float SpeexDSPNoiseSuppressorAudioProcessor::getProbContinue() const {
     return apvts.getRawParameterValue("probcontinue")->load();
 }
+float SpeexDSPNoiseSuppressorAudioProcessor::getVadThresholdDb() const {
+    return apvts.getRawParameterValue("vadThreshold")->load();
+}
+float SpeexDSPNoiseSuppressorAudioProcessor::getGateFloorDb() const {
+    return apvts.getRawParameterValue("gateFloor")->load();
+}
+float SpeexDSPNoiseSuppressorAudioProcessor::getGateAttackMs() const {
+    return apvts.getRawParameterValue("gateAttackMs")->load();
+}
+float SpeexDSPNoiseSuppressorAudioProcessor::getGateReleaseMs() const {
+    return apvts.getRawParameterValue("gateReleaseMs")->load();
+}
 
 void SpeexDSPNoiseSuppressorAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	const double frameDurationMs = 20.0; // Set your desired frame duration in milliseconds, 20ms is the default for Speex.
     speexFrameSize = (int)(sampleRate * frameDurationMs / 1000.0);
 
-    // Gate smoothing: 2 ms attack, 80 ms release
-    const float attackMs = 2.0f;
-    const float releaseMs = 80.0f;
+    const float attackMs = getGateAttackMs();
+    const float releaseMs = getGateReleaseMs();
     gateAttack = 1.0f - std::exp(-1.0f / (attackMs * 0.001f * (float)sampleRate));
     gateRelease = 1.0f - std::exp(-1.0f / (releaseMs * 0.001f * (float)sampleRate));
+    prevAttackMs = getGateAttackMs();
+    prevReleaseMs = getGateReleaseMs();
 
     for (int ch = 0; ch < 2; ++ch)
     {
@@ -67,20 +88,20 @@ void SpeexDSPNoiseSuppressorAudioProcessor::prepareToPlay(double sampleRate, int
         if (speexStates[ch]) speex_preprocess_state_destroy(speexStates[ch]);
         speexStates[ch] = speex_preprocess_state_init(speexFrameSize, (int)sampleRate);
 
-        // fetch input params
         int enableVAD = getEnableVAD() ? 1 : 0;
         int enableDenoise = getEnableDenoise() ? 1 : 0;
         float noiseSuppress = getNoiseSuppress();
-        float probStart     = getProbStart();
-        float probContinue  = getProbContinue();
         int noiseSuppressInt = (int)noiseSuppress;
+        float probStart = getProbStart();
+        int probStartInt = (int)probStart;
+        float probContinue = getProbContinue();
+        int probContinueInt = (int)probContinue;
 
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_VAD, &enableVAD);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noiseSuppressInt);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStart);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinue);
-
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStartInt);
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinueInt);
 
         // pre-fill output FIFO with one frame of zeros (pre-buffer)
         channelOutputFIFOs[ch].assign((size_t)speexFrameSize, 0.0f);
@@ -89,6 +110,7 @@ void SpeexDSPNoiseSuppressorAudioProcessor::prepareToPlay(double sampleRate, int
         frameI16[ch].assign((size_t)speexFrameSize, 0);
 
         gateGain[ch] = 1.0f; // reset
+        juce::ignoreUnused(samplesPerBlock);
     }
     // Tell the host about the exact processing latency (1 frame = 20 ms)
     setLatencySamples(speexFrameSize);
@@ -111,21 +133,33 @@ void SpeexDSPNoiseSuppressorAudioProcessor::processBlock(juce::AudioBuffer<float
     juce::ScopedNoDenormals noDenormals;
     const int numChannels = juce::jmin(2, buffer.getNumChannels());
     const int numSamples = buffer.getNumSamples();
+    const float attackMsNow = getGateAttackMs();
+    const float releaseMsNow = getGateReleaseMs();
+    if (attackMsNow != prevAttackMs || releaseMsNow != prevReleaseMs)
+    {
+        const float sr = (float)getSampleRate();
+        gateAttack = 1.0f - std::exp(-1.0f / (attackMsNow * 0.001f * sr));
+        gateRelease = 1.0f - std::exp(-1.0f / (releaseMsNow * 0.001f * sr));
+        prevAttackMs = attackMsNow;
+        prevReleaseMs = releaseMsNow;
+    }
 
     for (int ch = 0; ch < numChannels; ++ch)
     {
         int enableVAD = getEnableVAD() ? 1 : 0;
         int enableDenoise = getEnableDenoise() ? 1 : 0;
         float noiseSuppress = getNoiseSuppress();
-        float probStart = getProbStart();
-        float probContinue = getProbContinue();
         int noiseSuppressInt = (int)noiseSuppress;
+        float probStart = getProbStart();
+        int probStartInt = (int)probStart;
+        float probContinue = getProbContinue();
+        int probContinueInt = (int)probContinue;
 
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_DENOISE, &enableDenoise);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_VAD, &enableVAD);
         speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noiseSuppressInt);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStart);
-        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinue);
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_START, &probStartInt);
+        speex_preprocess_ctl(speexStates[ch], SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probContinueInt);
     }
 
     for (int ch = 0; ch < numChannels; ++ch)
@@ -152,18 +186,19 @@ void SpeexDSPNoiseSuppressorAudioProcessor::processBlock(juce::AudioBuffer<float
 
             int isSpeech = speex_preprocess_run(speexStates[ch], frm.data());
 
-            // RMS level check safety
+            // VAD RMS level check safety
             float rms = 0.0f;
             for (int j = 0; j < speexFrameSize; ++j) {
                 float v = (float)frm[(size_t)j] / 32768.0f;
                 rms += v * v;
             }
             rms = std::sqrt(rms / (float)speexFrameSize);
-            if (!isSpeech && rms > 0.01f)  // set RMS level to -40 dBFS
+            float vadThresholdLinear = std::pow(10.0f, getVadThresholdDb() / 20.0f); // read the VAD threshold
+            if (!isSpeech && rms > vadThresholdLinear) 
                 isSpeech = 1;
 
             // VAD-driven soft gate
-            float target = isSpeech ? 1.0f : gateFloor;
+            float target = isSpeech ? 1.0f : std::pow(10.0f, getGateFloorDb() / 20.0f); // reduce non-speech audio by user-defined value
             float& g = gateGain[ch];
             float  coef = (target > g) ? gateAttack : gateRelease;
 
