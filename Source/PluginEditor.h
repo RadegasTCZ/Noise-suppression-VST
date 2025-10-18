@@ -14,6 +14,7 @@ private:
 
     juce::ToggleButton enableDenoiseButton;
     juce::ToggleButton enableVADButton;
+    juce::ToggleButton enableLevelGateButton;
     juce::Slider noiseSuppressSlider;
     juce::Slider probStartSlider;
     juce::Slider probContinueSlider;
@@ -32,6 +33,7 @@ private:
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableDenoiseAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableVADAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableLevelGateAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> noiseSuppressAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> probStartAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> probContinueAttachment;

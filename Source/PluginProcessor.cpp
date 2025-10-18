@@ -23,7 +23,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpeexDSPNoiseSuppressorAudio
     params.push_back(std::make_unique<juce::AudioParameterBool>(
         "enableDenoise", "Enable Noise Suppression", true));
     params.push_back(std::make_unique<juce::AudioParameterBool>(
-        "enableVAD", "Enable Voice Activation Detection", true));
+        "enableVAD", "Enable Voice Activation Detection", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(
+        "enableLevelGate", "Enable Level Noise Gate", false));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         "noisesuppress", "Noise Suppress (dB)", juce::NormalisableRange<float>(-40.0f, -5.0f, 1.0f, 1.0f, true), -20.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
@@ -31,7 +33,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpeexDSPNoiseSuppressorAudio
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         "probcontinue", "Noise Adaptation Rate", juce::NormalisableRange<float>(50.0f, 100.0f, 1.0f, 1.0f, true), 70.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "vadThreshold", "VAD RMS Threshold (dBFS)", juce::NormalisableRange<float>(-60.0f, -15.0f, 1.0f, 1.0f, true), -40.0f));
+        "vadThreshold", "Noise Gate RMS Threshold (dBFS)", juce::NormalisableRange<float>(-60.0f, -15.0f, 1.0f, 1.0f, true), -40.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
         "gateFloor", "Gate Floor (dB)", juce::NormalisableRange<float>(-60.0f, -5.0f, 1.0f, 1.0f, true), -20.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(
@@ -46,6 +48,9 @@ bool SpeexDSPNoiseSuppressorAudioProcessor::getEnableDenoise() const {
 }
 bool SpeexDSPNoiseSuppressorAudioProcessor::getEnableVAD() const {
     return apvts.getRawParameterValue("enableVAD")->load() > 0.5f;
+}
+bool SpeexDSPNoiseSuppressorAudioProcessor::getEnableLevelGate() const {
+    return apvts.getRawParameterValue("enableLevelGate")->load() > 0.5f;
 }
 float SpeexDSPNoiseSuppressorAudioProcessor::getNoiseSuppress() const {
     return apvts.getRawParameterValue("noisesuppress")->load();
@@ -193,11 +198,35 @@ void SpeexDSPNoiseSuppressorAudioProcessor::processBlock(juce::AudioBuffer<float
                 rms += v * v;
             }
             rms = std::sqrt(rms / (float)speexFrameSize);
-            float vadThresholdLinear = std::pow(10.0f, getVadThresholdDb() / 20.0f); // read the VAD threshold
-            if (!isSpeech && rms > vadThresholdLinear) 
-                isSpeech = 1;
 
-            // VAD-driven soft gate
+            // after isSpeech from Speex + rms computed
+            const float rmsDb = 20.0f * std::log10(rms + 1e-12f);
+            const float thrDb = getVadThresholdDb();
+            constexpr float hystClose = 3.0f;
+
+            const bool uiVadEnabled = getEnableVAD();
+            const bool uiLevelGateOn = getEnableLevelGate();
+            const bool speexOpen = (isSpeech != 0);
+            const bool levelOpen = (rmsDb >= thrDb);
+            const bool nearBand = (rmsDb >= (thrDb - hystClose));
+
+            bool gateOpen;
+            if (!uiVadEnabled && !uiLevelGateOn) {
+                gateOpen = true; // Gate OFF (always open)
+            }
+            else if (!uiVadEnabled && uiLevelGateOn) {
+                gateOpen = levelOpen; // Level-only
+            }
+            else if (uiVadEnabled && !uiLevelGateOn) {
+                gateOpen = speexOpen; // Speex-only
+            }
+            else {
+                gateOpen = (speexOpen && levelOpen); // Both: AND (conservative)
+                if (!nearBand && !speexOpen) gateOpen = false; // firm close below band
+            }
+            isSpeech = gateOpen ? 1 : 0;
+
+            // Apply audio gating, if enabled
             float target = isSpeech ? 1.0f : std::pow(10.0f, getGateFloorDb() / 20.0f); // reduce non-speech audio by user-defined value
             float& g = gateGain[ch];
             float  coef = (target > g) ? gateAttack : gateRelease;

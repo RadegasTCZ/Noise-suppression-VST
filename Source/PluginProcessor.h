@@ -36,6 +36,7 @@ public:
     // Parameter accessors
     bool getEnableDenoise() const;
     bool getEnableVAD() const;
+    bool getEnableLevelGate() const;
     float getNoiseSuppress() const;
     float getProbStart() const;
     float getProbContinue() const;

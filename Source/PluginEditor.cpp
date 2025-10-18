@@ -9,6 +9,9 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     addAndMakeVisible(enableVADButton);
     enableVADButton.setButtonText("Enable Voice Activation Detection");
 
+    addAndMakeVisible(enableLevelGateButton);
+    enableLevelGateButton.setButtonText("Enable Level Noise Gate");
+
     addAndMakeVisible(suppressionLabel);
     suppressionLabel.setText("Noise suppression level:", juce::dontSendNotification);
     suppressionLabel.setJustificationType(juce::Justification::centredLeft);
@@ -43,7 +46,7 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     probContinueSlider.setTooltip("How quickly noise adapts to changes");
 
     addAndMakeVisible(vadThresholdLabel);
-    vadThresholdLabel.setText("VAD RMS Threshold level:", juce::dontSendNotification);
+    vadThresholdLabel.setText("Noise Gate RMS Threshold level:", juce::dontSendNotification);
     vadThresholdLabel.setJustificationType(juce::Justification::centredLeft);
 
     addAndMakeVisible(vadThresholdSlider);
@@ -51,7 +54,7 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     vadThresholdSlider.setRange(-60, -15, 1.0);
     vadThresholdSlider.setTextValueSuffix(" dBFS");
     vadThresholdSlider.setNumDecimalPlacesToDisplay(0);
-    vadThresholdSlider.setTooltip("Set the VAD threshold level to clamp down on residual noise");
+    vadThresholdSlider.setTooltip("Set the gate threshold level to clamp down on residual noise");
 
     addAndMakeVisible(gateFloorLabel);
     gateFloorLabel.setText("Gate floor:", juce::dontSendNotification);
@@ -97,6 +100,8 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
         processor.apvts, "enableDenoise", enableDenoiseButton);
     enableVADAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
         processor.apvts, "enableVAD", enableVADButton);
+    enableLevelGateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
+        processor.apvts, "enableLevelGate", enableLevelGateButton);
     noiseSuppressAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processor.apvts, "noisesuppress", noiseSuppressSlider);
     probStartAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
@@ -117,7 +122,7 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcess
     const int labelHeight = 18;
     const int sliderHeight = 32;
     const int sliderSpacing = 10;
-    const int numButtons = 2;
+    const int numButtons = 3;
     const int numSliderGroups = 7;
     const int totalHeight = margin + (numButtons * (buttonHeight)) + margin + (numSliderGroups * (labelHeight + sliderHeight + sliderSpacing)) + margin;
     setSize(400, totalHeight);
@@ -127,7 +132,7 @@ SpeexDSPNoiseSuppressorAudioProcessorEditor::~SpeexDSPNoiseSuppressorAudioProces
 
 void SpeexDSPNoiseSuppressorAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::darkgrey);
+    g.fillAll(juce::Colour(0xff020b1a));
 }
 
 void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
@@ -143,7 +148,9 @@ void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
     enableDenoiseButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
     y += buttonHeight + sliderSpacing;
     enableVADButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
-    y += buttonHeight + sliderSpacing + margin;
+    y += buttonHeight + sliderSpacing;
+    enableLevelGateButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
+    y += buttonHeight + sliderSpacing;
     suppressionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
     y += labelHeight + 2;
     noiseSuppressSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
