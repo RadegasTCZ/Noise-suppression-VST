@@ -6,7 +6,8 @@ This is a VST*/VST3 plugin for basic light-weight real-time noise suppresion usi
 
 ## Preview
 
-![image](https://github.com/user-attachments/assets/b9e4efab-1d4e-4d52-8755-e74ffb43d305)
+<img width="500" height="625" alt="image" src="https://github.com/user-attachments/assets/c6203b5d-6f7b-4b16-8aef-d68a9203061a" />
+
 
 ## Features
  - Realtime noise suppression using open-source SpeexDSP
