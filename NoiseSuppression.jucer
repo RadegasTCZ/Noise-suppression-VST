@@ -247,7 +247,9 @@
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2026 targetFolder="Builds/VisualStudio2026">
+    <VS2026 targetFolder="Builds/VisualStudio2026"
+            extraCompilerFlags="/d1trimfile:&quot;$([System.IO.Path]::GetFullPath('$(ProjectDir)..\..'))&quot;"
+            extraLinkerFlags="/PDBALTPATH:%_PDB%">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="NoiseSuppression"
                        headerPath="../../ThirdParty/speexdsp&#10;../../ThirdParty/rnnoise/include&#10;../../ThirdParty/webrtc&#10;../../ThirdParty/webrtc/shim"

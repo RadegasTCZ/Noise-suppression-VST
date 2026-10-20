@@ -118,7 +118,8 @@ regeneration steps).
   combine GPLv3 and AGPLv3 code, so the AGPLv3 applies to them as a whole. VST3 SDK © Steinberg Media Technologies GmbH (MIT).
 
 This code is released under the GPLv3 license. See the `LICENSE` file for details; the third-party
-license files are listed there and in `ThirdParty/UPSTREAM.md`.
+license files are listed there and in `ThirdParty/UPSTREAM.md`. `THIRD_PARTY_NOTICES.md` has the full
+licence texts of everything inside the plugin binaries, including the components bundled with JUCE.
 
 VST is a registered trademark of Steinberg Media Technologies GmbH.
 
