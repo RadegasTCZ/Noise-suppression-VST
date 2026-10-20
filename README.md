@@ -1,4 +1,4 @@
-# Noise Suppression (VST2 / VST3)
+# Noise Suppression (VST2 / VST3 / Standalone)
 
 *My very first project I published on GitHub, now in its second generation.*
 
@@ -38,6 +38,10 @@ for every engine (DeepFilterNet needs three frames; the other engines are padded
 never changes the latency); at other sample rates it is about 40 ms plus a few samples of resampler
 delay, reported to the host.
 
+There is also a **standalone app** for use outside a plugin host: pick your
+microphone as input and a virtual audio cable (for example VB-Audio Virtual Cable) as output in its
+audio settings, then select the cable as the microphone in your call or streaming app.
+
 Version 2 is a new plugin identity for hosts (new name, file names and plugin/manufacturer IDs), so it
 installs next to v1.1.2 instead of replacing it, and sessions saved with v1.1.2 will not find it
 automatically. State saved by v1.1.2 that is loaded into v2 opens with the Classic engine, your old
@@ -60,7 +64,7 @@ Requirements: Windows x64, Visual Studio 2026, [JUCE 9.0.3](https://juce.com) in
    & "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\amd64\MSBuild.exe" `
        Builds\VisualStudio2026\NoiseSuppression.sln -p:Configuration=Release -p:Platform=x64
    ```
-   The plugins are under `Builds\VisualStudio2026\x64\Release\`.
+   The plugins are under `Builds\VisualStudio2026\x64\Release\` (`VST3\`, `VST\`, and the app in `Standalone Plugin\`).
 
 ### Tests
 
@@ -130,7 +134,7 @@ Building VST2 versions of this plugin is only possible if you already have the V
 
 No VST2 SDK files are included in this repository, and I cannot provide them.
 VST2 builds are for personal use only and must not be redistributed: the VST2 SDK license is not
-compatible with the GPL. Published binaries are VST3 only.
+compatible with the GPL. Published binaries are VST3 and Standalone only.
 VST3 build is fully supported and open source.
 
 ## Tools

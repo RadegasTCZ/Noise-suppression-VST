@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="bXCg4L" name="NoiseSuppression" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
-              cppLanguageStandard="20" version="2.0.0" pluginFormats="buildVST,buildVST3"
+              cppLanguageStandard="20" version="2.0.0" pluginFormats="buildStandalone,buildVST,buildVST3"
               companyName="RadegasTCZ" companyCopyright="2026"
               companyWebsite="https://github.com/RadegasTCZ/Noise-suppression-VST"
               companyEmail="radegast2321@gmail.com"
