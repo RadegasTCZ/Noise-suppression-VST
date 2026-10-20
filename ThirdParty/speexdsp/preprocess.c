@@ -569,6 +569,63 @@ EXPORT void speex_preprocess_state_destroy(SpeexPreprocessState *st)
    speex_free(st);
 }
 
+/* nsp local patch (Noise Suppression 2.0): allocation-free reset.
+   Restores the adaptive state to exactly what speex_preprocess_state_init()
+   leaves behind (speex_alloc() zero-fills; init then sets the values below).
+   Keeps parameters set through speex_preprocess_ctl(), the echo state pointer,
+   the window, the loudness weights, the filterbank and the FFT lookup. */
+EXPORT void speex_preprocess_state_reset(SpeexPreprocessState *st)
+{
+   int i;
+   int N = st->ps_size;
+   int N3 = 2*N - st->frame_size;
+   int M = st->nbands;
+
+   /* Arrays init leaves zero-filled */
+   SPEEX_MEMSET(st->frame, 0, 2*N);
+   SPEEX_MEMSET(st->ft, 0, 2*N);
+   SPEEX_MEMSET(st->ps, 0, N+M);
+   SPEEX_MEMSET(st->echo_noise, 0, N+M);
+   SPEEX_MEMSET(st->residual_echo, 0, N+M);
+   SPEEX_MEMSET(st->gain2, 0, N+M);
+   SPEEX_MEMSET(st->gain_floor, 0, N+M);
+   SPEEX_MEMSET(st->zeta, 0, N+M);
+   SPEEX_MEMSET(st->S, 0, N);
+   SPEEX_MEMSET(st->Smin, 0, N);
+   SPEEX_MEMSET(st->Stmp, 0, N);
+
+   /* Values init sets explicitly */
+   for (i=0;i<N+M;i++)
+   {
+      st->noise[i]=QCONST32(1.f,NOISE_SHIFT);
+      st->reverb_estimate[i]=0;
+      st->old_ps[i]=1;
+      st->gain[i]=Q15_ONE;
+      st->post[i]=SHL16(1, SNR_SHIFT);
+      st->prior[i]=SHL16(1, SNR_SHIFT);
+   }
+   for (i=0;i<N;i++)
+      st->update_prob[i] = 1;
+   for (i=0;i<N3;i++)
+   {
+      st->inbuf[i]=0;
+      st->outbuf[i]=0;
+   }
+#ifndef FIXED_POINT
+   st->loudness_accum = 0;
+   st->loudness = 1e-15;
+   st->agc_gain = 1;
+   st->prev_loudness = 1;
+   st->init_max = 1;
+#else
+   st->frame_shift = 0;
+#endif
+   st->speech_prob = 0;
+   st->was_speech = 0;
+   st->nb_adapt = 0;
+   st->min_count = 0;
+}
+
 /* FIXME: The AGC doesn't work yet with fixed-point*/
 #ifndef FIXED_POINT
 static void speex_compute_agc(SpeexPreprocessState *st, spx_word16_t Pframe, spx_word16_t *ft)

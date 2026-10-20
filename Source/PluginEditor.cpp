@@ -1,181 +1,177 @@
 #include "PluginEditor.h"
+#include "Params.h"
+#include "UI/ClassicPanel.h"
+#include "UI/RnnoisePanel.h"
+#include "UI/DfnPanel.h"
+#include "UI/SnsPanel.h"
+#include "UI/WebRtcPanel.h"
+#include "UI/SuppressKnob.h"
 
-SpeexDSPNoiseSuppressorAudioProcessorEditor::SpeexDSPNoiseSuppressorAudioProcessorEditor (SpeexDSPNoiseSuppressorAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+namespace
 {
-    addAndMakeVisible(enableDenoiseButton);
-    enableDenoiseButton.setButtonText("Enable Noise Suppression");
-
-    addAndMakeVisible(enableVADButton);
-    enableVADButton.setButtonText("Enable Voice Activation Detection");
-
-    addAndMakeVisible(enableLevelGateButton);
-    enableLevelGateButton.setButtonText("Enable Level Noise Gate");
-
-    addAndMakeVisible(suppressionLabel);
-    suppressionLabel.setText("Noise suppression level:", juce::dontSendNotification);
-    suppressionLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(noiseSuppressSlider);
-    noiseSuppressSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    noiseSuppressSlider.setRange(-40.0, -5.0, 1.0);
-    noiseSuppressSlider.setTextValueSuffix(" dB");
-    noiseSuppressSlider.setNumDecimalPlacesToDisplay(0);
-    noiseSuppressSlider.setTooltip("Noise suppression level");
-
-    addAndMakeVisible(learningLabel);
-    learningLabel.setText("Learning aggressiveness:", juce::dontSendNotification);
-    learningLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(probStartSlider);
-    probStartSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    probStartSlider.setRange(50, 100, 1);
-    probStartSlider.setTextValueSuffix("%");
-    probStartSlider.setNumDecimalPlacesToDisplay(0);
-    probStartSlider.setTooltip("How much to trust the start as noise");
-
-    addAndMakeVisible(adoptionLabel);
-    adoptionLabel.setText("Adoption aggressiveness:", juce::dontSendNotification);
-    adoptionLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(probContinueSlider);
-    probContinueSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    probContinueSlider.setRange(50, 100, 1);
-    probContinueSlider.setTextValueSuffix("%");
-    probContinueSlider.setNumDecimalPlacesToDisplay(0);
-    probContinueSlider.setTooltip("How quickly noise adapts to changes");
-
-    addAndMakeVisible(vadThresholdLabel);
-    vadThresholdLabel.setText("Noise Gate RMS Threshold level:", juce::dontSendNotification);
-    vadThresholdLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(vadThresholdSlider);
-    vadThresholdSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    vadThresholdSlider.setRange(-60, -15, 1.0);
-    vadThresholdSlider.setTextValueSuffix(" dBFS");
-    vadThresholdSlider.setNumDecimalPlacesToDisplay(0);
-    vadThresholdSlider.setTooltip("Set the gate threshold level to clamp down on residual noise");
-
-    addAndMakeVisible(gateFloorLabel);
-    gateFloorLabel.setText("Gate floor:", juce::dontSendNotification);
-    gateFloorLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(gateFloorSlider);
-    gateFloorSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    gateFloorSlider.setRange(-60.0, -5.0, 1.0);
-    gateFloorSlider.setTextValueSuffix(" dB");
-    gateFloorSlider.setNumDecimalPlacesToDisplay(0);
-    gateFloorSlider.setTooltip("Reduction applied when no speech is detected");
-
-    addAndMakeVisible(gateAttackLabel);
-    gateAttackLabel.setText("Gate attack (ms):", juce::dontSendNotification);
-    gateAttackLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(gateAttackSlider);
-    gateAttackSlider.setSliderStyle(juce::Slider::IncDecButtons);
-    gateAttackSlider.setRange(1.0, 10.0, 0.5);
-    gateAttackSlider.setNumDecimalPlacesToDisplay(1);
-    gateAttackSlider.setTextValueSuffix(" ms");
-    gateAttackSlider.setTooltip("Smoothing attack (1–10 ms)");
-    gateAttackSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 60, 28);
-    gateAttackSlider.setIncDecButtonsMode(juce::Slider::incDecButtonsDraggable_AutoDirection);
-
-    addAndMakeVisible(gateReleaseLabel);
-    gateReleaseLabel.setText("Gate release (ms):", juce::dontSendNotification);
-    gateReleaseLabel.setJustificationType(juce::Justification::centredLeft);
-
-    addAndMakeVisible(gateReleaseSlider);
-    gateReleaseSlider.setSliderStyle(juce::Slider::IncDecButtons);
-    gateReleaseSlider.setRange(10.0, 1000.0, 5.0);
-    gateReleaseSlider.setNumDecimalPlacesToDisplay(0);
-    gateReleaseSlider.setTextValueSuffix(" ms");
-    gateReleaseSlider.setTooltip("Smoothing release (10–1000 ms)");
-    gateReleaseSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 60, 28);
-    gateReleaseSlider.setIncDecButtonsMode(juce::Slider::incDecButtonsDraggable_AutoDirection);
-
-    addAndMakeVisible(versionLabel);
-    versionLabel.setText("Version: " JucePlugin_VersionString, juce::dontSendNotification);
-
-    enableDenoiseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processor.apvts, "enableDenoise", enableDenoiseButton);
-    enableVADAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processor.apvts, "enableVAD", enableVADButton);
-    enableLevelGateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processor.apvts, "enableLevelGate", enableLevelGateButton);
-    noiseSuppressAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "noisesuppress", noiseSuppressSlider);
-    probStartAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "probstart", probStartSlider);
-    probContinueAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "probcontinue", probContinueSlider);
-    vadThresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "vadThreshold", vadThresholdSlider);
-    gateFloorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "gateFloor", gateFloorSlider);
-    gateAttackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "gateAttackMs", gateAttackSlider);
-    gateReleaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        processor.apvts, "gateReleaseMs", gateReleaseSlider);
-
-    const int margin = 16;
-    const int buttonHeight = 16;
-    const int labelHeight = 18;
-    const int sliderHeight = 32;
-    const int sliderSpacing = 10;
-    const int numButtons = 3;
-    const int numSliderGroups = 7;
-    const int totalHeight = margin + (numButtons * (buttonHeight)) + margin + (numSliderGroups * (labelHeight + sliderHeight + sliderSpacing)) + margin;
-    setSize(400, totalHeight);
+juce::Font titleFont()
+{
+    // design: 11 px, weight 600, letter-spacing .08em -> kerning factor 0.08 (FontOptions::withKerningFactor)
+    return juce::Font (juce::FontOptions (juce::Font::getDefaultSansSerifFontName(), 11.0f, juce::Font::bold)
+                           .withKerningFactor (0.08f));
 }
 
-SpeexDSPNoiseSuppressorAudioProcessorEditor::~SpeexDSPNoiseSuppressorAudioProcessorEditor() {}
+double nowSeconds() { return juce::Time::getMillisecondCounterHiRes() * 0.001; }
+} // namespace
 
-void SpeexDSPNoiseSuppressorAudioProcessorEditor::paint(juce::Graphics& g)
+NoiseSuppressionEditor::NoiseSuppressionEditor (NoiseSuppressionProcessor& p)
+    : juce::AudioProcessorEditor (p),
+      proc (p),
+      engineParam (p.apvts.getRawParameterValue (nsp::ids::engine)),
+      meters (p.inputPeak, p.outputPeak)
 {
-    g.fillAll(juce::Colour(0xff020b1a));
+    using Apvts = juce::AudioProcessorValueTreeState;
+
+    engineBox.addItemList (nsp::engineNames(), 1);           // item id = choice index + 1; items before the attachment
+    engineBox.setComponentID (nsp::ids::engine);
+    addAndMakeVisible (engineBox);
+    engineAttachment = std::make_unique<Apvts::ComboBoxAttachment> (p.apvts, nsp::ids::engine, engineBox);
+
+    bypassButton.setComponentID (nsp::ids::bypass);
+    addAndMakeVisible (bypassButton);
+    bypassAttachment = std::make_unique<Apvts::ButtonAttachment> (p.apvts, nsp::ids::bypass, bypassButton);
+
+    monitorButton.setComponentID (nsp::ids::monitorResidual);
+    addAndMakeVisible (monitorButton);
+    monitorAttachment = std::make_unique<Apvts::ButtonAttachment> (p.apvts, nsp::ids::monitorResidual, monitorButton);
+
+    limiterButton.setComponentID (nsp::ids::limiter);
+    addAndMakeVisible (limiterButton);
+    limiterAttachment = std::make_unique<Apvts::ButtonAttachment> (p.apvts, nsp::ids::limiter, limiterButton);
+
+    panels.push_back (std::make_unique<nsp::ui::ClassicPanel> (p.apvts));                                     // kEngineClassic
+    panels.push_back (std::make_unique<nsp::ui::SnsPanel> (p.apvts, [&p] { return p.getSnsNoiseFloorDb(); })); // kEngineSns
+    panels.push_back (std::make_unique<nsp::ui::WebRtcPanel> (p.apvts));                                      // kEngineWebRtc
+    panels.push_back (std::make_unique<nsp::ui::RnnoisePanel> (p.apvts, [&p] (int model) { return p.isRnnoiseModelFailed (model); })); // kEngineRnnoise
+    panels.push_back (std::make_unique<nsp::ui::DfnPanel> (p.apvts, [&p] { return p.isDfnModelFailed(); })); // kEngineDfn
+    jassert ((int) panels.size() == nsp::engineNames().size());
+    for (auto& panel : panels)
+        addChildComponent (*panel);
+
+    addAndMakeVisible (meters);
+
+    // last: a Slider rebuilds its value box only on a look-and-feel change, so every child must exist first
+    setLookAndFeel (&theme);
+
+    setResizable (false, false);
+    setSize (kWidth, kHeight);             // the only setSize call (fixed size, no resizing)
+    lastTickSeconds = nowSeconds();
+    timerCallback();                       // active panel, readout and title state before the first paint
+    startTimerHz (30);
 }
 
-void SpeexDSPNoiseSuppressorAudioProcessorEditor::resized()
+NoiseSuppressionEditor::~NoiseSuppressionEditor()
 {
-    int margin = 16;
-    int labelHeight = 18;
-    int sliderHeight = 32;
-    int buttonHeight = 24;
-    int sliderSpacing = 10;
-    int halfWidth = (getWidth() - 3 * margin) / 2;
-    int y = margin;
+    stopTimer();
+    setLookAndFeel (nullptr);
+}
 
-    enableDenoiseButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
-    y += buttonHeight + sliderSpacing;
-    enableVADButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
-    y += buttonHeight + sliderSpacing;
-    enableLevelGateButton.setBounds(margin, y, getWidth() - 2 * margin, buttonHeight);
-    y += buttonHeight + sliderSpacing;
-    suppressionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
-    y += labelHeight + 2;
-    noiseSuppressSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += sliderHeight + sliderSpacing;
-    learningLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
-    y += labelHeight + 2;
-    probStartSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += sliderHeight + sliderSpacing;
-    adoptionLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
-    y += labelHeight + 2;
-    probContinueSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += sliderHeight + sliderSpacing;
-    vadThresholdLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
-    y += labelHeight + 2;
-    vadThresholdSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += sliderHeight + sliderSpacing;
-    gateFloorLabel.setBounds(margin, y, getWidth() - 2 * margin, labelHeight);
-    y += labelHeight + 2;
-    gateFloorSlider.setBounds(margin, y, getWidth() - 2 * margin, sliderHeight);
-    y += sliderHeight + sliderSpacing;
-    gateAttackLabel.setBounds(margin, y, halfWidth, labelHeight);
-    gateReleaseLabel.setBounds(margin + halfWidth + margin, y, halfWidth, labelHeight);
-    y += labelHeight + 4;
-    gateAttackSlider.setBounds(margin, y, halfWidth, sliderHeight);
-    gateReleaseSlider.setBounds(margin + halfWidth + margin, y, halfWidth, sliderHeight);
-    y += labelHeight + 2 + margin;
-    versionLabel.setBounds(10, getHeight() - 24, 120, 20);
+juce::String NoiseSuppressionEditor::titleText() const
+{
+    return rateSupported ? juce::String ("NOISE SUPPRESSION") : juce::String ("Unsupported sample rate");
+}
+
+void NoiseSuppressionEditor::timerCallback()
+{
+    const double now = nowSeconds();
+    meters.tick ((float) juce::jlimit (0.0, 0.1, now - lastTickSeconds));
+    lastTickSeconds = now;
+
+    const int engine = juce::jlimit (0, (int) panels.size() - 1, juce::roundToInt (engineParam->load()));
+    if (engine != shownEngine)
+    {
+        for (size_t i = 0; i < panels.size(); ++i)
+            panels[i]->setVisible ((int) i == engine);
+        shownEngine = engine;
+    }
+
+    const auto text = panels[(size_t) engine]->readout();
+    const bool warning = panels[(size_t) engine]->readoutIsWarning();
+    if (text != readout || warning != readoutWarning)
+    {
+        readout = text;
+        readoutWarning = warning;
+        repaint (readoutArea);
+    }
+
+    const bool supported = proc.isSampleRateSupported();
+    if (supported != rateSupported)
+    {
+        rateSupported = supported;
+        repaint (titleArea);
+    }
+}
+
+void NoiseSuppressionEditor::resized()
+{
+    using nsp::ui::EnginePanel;
+    auto area = getLocalBounds().reduced (kPad);                                   // 8, 8, 424, 124
+    auto header = area.removeFromTop (kHeaderHeight);                              // 8, 8, 424, 28
+    titleArea = header.removeFromLeft (kTitleWidth);                               // 8, 8, 140, 28
+    header.removeFromLeft (kGapX);
+    bypassButton.setBounds (header.removeFromRight (kBypassWidth));                // 356, 8, 76, 28
+    header.removeFromRight (kGapX);
+    engineBox.setBounds (header.withSizeKeepingCentre (header.getWidth(), kComboHeight)); // 158, 10, 188, 24
+
+    area.removeFromTop (kGapY);
+    boxArea = area;                                                                // 8, 44, 424, 88
+    auto inner = boxArea.reduced (1).reduced (kBoxPadX, kBoxPadY);                 // 19, 53, 402, 70
+
+    const auto slot = inner.removeFromLeft (EnginePanel::kWidth);                  // 19, 53, 62, 70
+    for (auto& panel : panels)
+        panel->setBounds (slot);
+    inner.removeFromLeft (kGapX);
+
+    limiterButton.setBounds (inner.removeFromLeft (EnginePanel::kWidth));          // 91, 53, 62, 70: switch + caption
+    inner.removeFromLeft (kGapX);
+
+    separatorArea = inner.removeFromLeft (1);                                      // 163, 53, 1, 70
+    inner.removeFromLeft (kGapX);                                                  // 174, 53, 247, 70
+
+    auto right = inner.reduced (0, 4);                                             // 174, 57, 247, 62
+    meters.setBounds (right.removeFromTop (nsp::ui::MeterView::kHeight));          // 174, 57, 247, 37
+    right.removeFromTop (5);
+    monitorButton.setBounds (right.removeFromLeft (kMonitorWidth));                // 174, 99, 130, 20
+    readoutArea = right;                                                           // 304, 99, 117, 20
+}
+
+void NoiseSuppressionEditor::paint (juce::Graphics& g)
+{
+    using namespace nsp::ui;
+    g.fillAll (colours::bg);
+
+    g.setColour (rateSupported ? colours::text : colours::warn);
+    g.setFont (titleFont());
+    g.drawFittedText (titleText(), titleArea, juce::Justification::centredLeft, 1, 0.8f);
+
+    const auto box = boxArea.toFloat().reduced (0.5f);
+    g.setColour (colours::panel);
+    g.fillRoundedRectangle (box, 5.0f);
+    g.setColour (colours::line);
+    g.drawRoundedRectangle (box, 5.0f, 1.0f);
+    g.fillRect (separatorArea);
+
+    if (readout.isNotEmpty() && readoutWarning)
+    {
+        // e.g. "Model failed to load": whole text in the warn colour, squeezed (min 80 %) into the 117 px area
+        g.setColour (colours::warn);
+        g.setFont (uiFont (11.0f));
+        g.drawFittedText (readout, readoutArea, juce::Justification::centredRight, 1, 0.8f);
+    }
+    else if (readout.isNotEmpty())
+    {
+        // "Floor -62.4": label dim, value in the text colour
+        const int split = readout.lastIndexOfChar (' ') + 1;
+        juce::AttributedString s;
+        s.append (readout.substring (0, split), monoFont (11.0f), colours::dim);
+        s.append (readout.substring (split), monoFont (11.0f), colours::text);
+        s.setJustification (juce::Justification::centredRight);
+        s.setWordWrap (juce::AttributedString::none);
+        s.draw (g, readoutArea.toFloat());
+    }
 }

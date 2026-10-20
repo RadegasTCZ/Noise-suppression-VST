@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="t02prj" name="NoiseSuppressionTests" projectType="consoleapp"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
+              cppLanguageStandard="20" version="2.0.0" companyName="RadegasTCZ">
+  <MAINGROUP id="t02mgr" name="NoiseSuppressionTests">
+    <GROUP id="t02g01" name="Tests">
+      <FILE id="t02a01" name="TestMain.cpp" compile="1" resource="0" file="TestMain.cpp"/>
+      <FILE id="t02a02" name="AllocCounter.h" compile="0" resource="0" file="AllocCounter.h"/>
+      <FILE id="t02a03" name="AllocCounter.cpp" compile="1" resource="0" file="AllocCounter.cpp"/>
+      <FILE id="t02a04" name="TestSignals.h" compile="0" resource="0" file="TestSignals.h"/>
+      <FILE id="t02a05" name="SanityTests.cpp" compile="1" resource="0" file="SanityTests.cpp"/>
+      <FILE id="t03c01" name="HostPrimitivesTests.cpp" compile="1" resource="0" file="HostPrimitivesTests.cpp"/>
+      <FILE id="t51t001" name="SafetyFloorTests.cpp" compile="1" resource="0" file="SafetyFloorTests.cpp"/>
+      <FILE id="t55t001" name="SafetyLimiterTests.cpp" compile="1" resource="0" file="SafetyLimiterTests.cpp"/>
+      <FILE id="t04c01" name="ResamplerTests.cpp" compile="1" resource="0" file="ResamplerTests.cpp"/>
+        <FILE id="t05c01" name="ClassicEngineTests.cpp" compile="1" resource="0" file="ClassicEngineTests.cpp"/>
+      <FILE id="t06c01" name="SnsEngineTests.cpp" compile="1" resource="0" file="SnsEngineTests.cpp"/>
+      <FILE id="t07t01" name="EngineHostTests.cpp" compile="1" resource="0" file="EngineHostTests.cpp"/>
+      <FILE id="t08t01" name="ProcessorTests.cpp" compile="1" resource="0" file="ProcessorTests.cpp"/>
+      <FILE id="t09t01" name="StateTests.cpp" compile="1" resource="0" file="StateTests.cpp"/>
+      <FILE id="t10ut1" name="UiMeterTests.cpp" compile="1" resource="0" file="UiMeterTests.cpp"/>
+<FILE id="t11ut1" name="UiEditorTests.cpp" compile="1" resource="0" file="UiEditorTests.cpp"/>
+<FILE id="t12rt1" name="RenderTests.cpp" compile="1" resource="0" file="RenderTests.cpp"/>
+<FILE id="t12rn1" name="Render.cpp" compile="1" resource="0" file="Render.cpp"/>
+<FILE id="t12rn2" name="Render.h" compile="0" resource="0" file="Render.h"/>
+<FILE id="t11tp1" name="TestPaths.h" compile="0" resource="0" file="TestPaths.h"/>
+      <FILE id="t10ut2" name="UiThemeTests.cpp" compile="1" resource="0" file="UiThemeTests.cpp"/>
+      <FILE id="t07t02" name="PassthroughEngine.h" compile="0" resource="0" file="PassthroughEngine.h"/>
+      <FILE id="t06c02" name="HybridDenoiseRef.cpp" compile="1" resource="0" file="sns_reference/HybridDenoiseRef.cpp"/>
+      <FILE id="t06c03" name="HybridDenoiseRef.h" compile="0" resource="0" file="sns_reference/HybridDenoiseRef.h"/>
+      <FILE id="t06c04" name="HybridDenoise.h" compile="0" resource="0" file="sns_reference/HybridDenoise.h"/>
+      <FILE id="t06c05" name="HybridDenoise_v240.inc" compile="0" resource="0" file="sns_reference/HybridDenoise_v240.inc"/>
+      <FILE id="t06c06" name="HybridDenoiseRefV240.cpp" compile="1" resource="0" file="sns_reference/HybridDenoiseRefV240.cpp"/>
+      <FILE id="s43t01" name="RnnoiseLibraryTests.cpp" compile="1" resource="0" file="RnnoiseLibraryTests.cpp"/>
+      <FILE id="s43t02" name="RnnoiseRef.h" compile="0" resource="0" file="rnnoise_reference/RnnoiseRef.h"/>
+      <FILE id="s43t03" name="RnnoiseRefStandard.c" compile="1" resource="0" file="rnnoise_reference/RnnoiseRefStandard.c"/>
+      <FILE id="s43t04" name="RnnoiseRefLight.c" compile="1" resource="0" file="rnnoise_reference/RnnoiseRefLight.c"/>
+      <FILE id="s44t01" name="VariantCrossfadeTests.cpp" compile="1" resource="0" file="VariantCrossfadeTests.cpp"/>
+      <FILE id="s45t01" name="RnnoiseEngineTests.cpp" compile="1" resource="0" file="RnnoiseEngineTests.cpp"/>
+      <FILE id="s48t01" name="WebRtcLibraryTests.cpp" compile="1" resource="0" file="WebRtcLibraryTests.cpp"/>
+      <FILE id="t02d009" name="DfnNetworkTests.cpp" compile="1" resource="0" file="DfnNetworkTests.cpp"/>
+      <FILE id="t32t001" name="DfnEngineTests.cpp" compile="1" resource="0" file="DfnEngineTests.cpp"/>
+      <FILE id="t22d003" name="DfnDenoiserTests.cpp" compile="1" resource="0" file="DfnDenoiserTests.cpp"/>
+      <FILE id="s49t01" name="WebRtcEngineTests.cpp" compile="1" resource="0" file="WebRtcEngineTests.cpp"/>
+      <FILE id="s4tss1" name="UiSelectorTests.cpp" compile="1" resource="0" file="UiSelectorTests.cpp"/>
+    </GROUP>
+    <GROUP id="t02g02" name="Source">
+      <GROUP id="t02g03" name="Host">
+        <FILE id="t03b01" name="RingBuffer.h" compile="0" resource="0" file="../Source/Host/RingBuffer.h"/>
+        <FILE id="t03b02" name="DelayLine.h" compile="0" resource="0" file="../Source/Host/DelayLine.h"/>
+        <FILE id="t03b03" name="PeakMeter.h" compile="0" resource="0" file="../Source/Host/PeakMeter.h"/>
+        <FILE id="t55b001" name="SafetyLimiter.h" compile="0" resource="0" file="../Source/Host/SafetyLimiter.h"/>
+        <FILE id="t04b01" name="Resampler.cpp" compile="1" resource="0" file="../Source/Host/Resampler.cpp"/>
+        <FILE id="t04b02" name="Resampler.h" compile="0" resource="0" file="../Source/Host/Resampler.h"/>
+        <FILE id="t07s01" name="EngineHost.cpp" compile="1" resource="0" file="../Source/Host/EngineHost.cpp"/>
+        <FILE id="t07s02" name="EngineHost.h" compile="0" resource="0" file="../Source/Host/EngineHost.h"/>
+        <FILE id="t09s01" name="StateMigration.cpp" compile="1" resource="0" file="../Source/Host/StateMigration.cpp"/>
+        <FILE id="t09s02" name="StateMigration.h" compile="0" resource="0" file="../Source/Host/StateMigration.h"/>
+      </GROUP>
+      <GROUP id="t02g04" name="Engines">
+          <FILE id="t05b01" name="Engine.h" compile="0" resource="0" file="../Source/Engines/Engine.h"/>
+          <FILE id="t05b02" name="ClassicSpeexEngine.cpp" compile="1" resource="0" file="../Source/Engines/ClassicSpeexEngine.cpp"/>
+          <FILE id="t05b03" name="ClassicSpeexEngine.h" compile="0" resource="0" file="../Source/Engines/ClassicSpeexEngine.h"/>
+          <FILE id="s44b01" name="VariantCrossfade.h" compile="0" resource="0" file="../Source/Engines/VariantCrossfade.h"/>
+          <FILE id="t51b001" name="SafetyFloor.h" compile="0" resource="0" file="../Source/Engines/SafetyFloor.h"/>
+        <FILE id="s45b01" name="RnnoiseEngine.cpp" compile="1" resource="0" file="../Source/Engines/RnnoiseEngine.cpp"/>
+        <FILE id="s45b02" name="RnnoiseEngine.h" compile="0" resource="0" file="../Source/Engines/RnnoiseEngine.h"/>
+        <FILE id="t32e001" name="DfnEngine.cpp" compile="1" resource="0" file="../Source/Engines/DfnEngine.cpp"/>
+        <FILE id="t32e002" name="DfnEngine.h" compile="0" resource="0" file="../Source/Engines/DfnEngine.h"/>
+        <FILE id="s49b01" name="WebRtcEngine.cpp" compile="1" resource="0" file="../Source/Engines/WebRtcEngine.cpp"/>
+        <FILE id="s49b02" name="WebRtcEngine.h" compile="0" resource="0" file="../Source/Engines/WebRtcEngine.h"/>
+        <FILE id="t06b03" name="SnsEngine.cpp" compile="1" resource="0" file="../Source/Engines/SnsEngine.cpp"/>
+        <FILE id="t06b04" name="SnsEngine.h" compile="0" resource="0" file="../Source/Engines/SnsEngine.h"/>
+        <GROUP id="t02d001" name="dfn">
+          <FILE id="t02d002" name="DfnModel.cpp" compile="1" resource="0" file="../Source/Engines/dfn/DfnModel.cpp"/>
+          <FILE id="t02d003" name="DfnModel.h" compile="0" resource="0" file="../Source/Engines/dfn/DfnModel.h"/>
+          <FILE id="t02d004" name="DfnNetwork.cpp" compile="1" resource="0" file="../Source/Engines/dfn/DfnNetwork.cpp"/>
+          <FILE id="t22d001" name="DfnDenoiser.cpp" compile="1" resource="0" file="../Source/Engines/dfn/DfnDenoiser.cpp"/>
+          <FILE id="t22d002" name="DfnDenoiser.h" compile="0" resource="0" file="../Source/Engines/dfn/DfnDenoiser.h"/>
+          <FILE id="t02d005" name="DfnNetwork.h" compile="0" resource="0" file="../Source/Engines/dfn/DfnNetwork.h"/>
+        </GROUP>
+        <GROUP id="t02g05" name="sns">
+          <FILE id="t06b01" name="HybridDenoise.cpp" compile="1" resource="0" file="../Source/Engines/sns/HybridDenoise.cpp"/>
+          <FILE id="t06b02" name="HybridDenoise.h" compile="0" resource="0" file="../Source/Engines/sns/HybridDenoise.h"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="t02g06" name="UI">
+        <FILE id="t10th3" name="Theme.cpp" compile="1" resource="0" file="../Source/UI/Theme.cpp"/>
+        <FILE id="t10th4" name="Theme.h" compile="0" resource="0" file="../Source/UI/Theme.h"/>
+        <FILE id="t10mb2" name="MeterBallistics.h" compile="0" resource="0" file="../Source/UI/MeterBallistics.h"/>
+        <FILE id="t10mv3" name="MeterView.cpp" compile="1" resource="0" file="../Source/UI/MeterView.cpp"/>
+        <FILE id="t10mv4" name="MeterView.h" compile="0" resource="0" file="../Source/UI/MeterView.h"/>
+<FILE id="t11sk2" name="SuppressKnob.h" compile="0" resource="0" file="../Source/UI/SuppressKnob.h"/>
+<FILE id="t11ep2" name="EnginePanel.h" compile="0" resource="0" file="../Source/UI/EnginePanel.h"/>
+<FILE id="t11cp3" name="ClassicPanel.cpp" compile="1" resource="0" file="../Source/UI/ClassicPanel.cpp"/>
+<FILE id="t11cp4" name="ClassicPanel.h" compile="0" resource="0" file="../Source/UI/ClassicPanel.h"/>
+<FILE id="t11sp3" name="SnsPanel.cpp" compile="1" resource="0" file="../Source/UI/SnsPanel.cpp"/>
+<FILE id="t11sp4" name="SnsPanel.h" compile="0" resource="0" file="../Source/UI/SnsPanel.h"/>
+        <FILE id="s4bss1" name="SegmentedSelector.cpp" compile="1" resource="0" file="../Source/UI/SegmentedSelector.cpp"/>
+        <FILE id="s4bss2" name="SegmentedSelector.h" compile="0" resource="0" file="../Source/UI/SegmentedSelector.h"/>
+        <FILE id="s4bwp1" name="WebRtcPanel.cpp" compile="1" resource="0" file="../Source/UI/WebRtcPanel.cpp"/>
+        <FILE id="s4bwp2" name="WebRtcPanel.h" compile="0" resource="0" file="../Source/UI/WebRtcPanel.h"/>
+        <FILE id="s4brp1" name="RnnoisePanel.cpp" compile="1" resource="0" file="../Source/UI/RnnoisePanel.cpp"/>
+        <FILE id="s4brp2" name="RnnoisePanel.h" compile="0" resource="0" file="../Source/UI/RnnoisePanel.h"/>
+        <FILE id="s5dfp1" name="DfnPanel.cpp" compile="1" resource="0" file="../Source/UI/DfnPanel.cpp"/>
+        <FILE id="s5dfp2" name="DfnPanel.h" compile="0" resource="0" file="../Source/UI/DfnPanel.h"/>
+      </GROUP>
+      <FILE id="t08s01" name="Params.cpp" compile="1" resource="0" file="../Source/Params.cpp"/>
+      <FILE id="t08s02" name="Params.h" compile="0" resource="0" file="../Source/Params.h"/>
+      <FILE id="t08s03" name="PluginProcessor.cpp" compile="1" resource="0" file="../Source/PluginProcessor.cpp"/>
+      <FILE id="t08s04" name="PluginProcessor.h" compile="0" resource="0" file="../Source/PluginProcessor.h"/>
+<FILE id="t11pe3" name="PluginEditor.cpp" compile="1" resource="0" file="../Source/PluginEditor.cpp"/>
+<FILE id="t11pe4" name="PluginEditor.h" compile="0" resource="0" file="../Source/PluginEditor.h"/>
+    </GROUP>
+    <GROUP id="t02g07" name="ThirdParty">
+      <GROUP id="t02g08" name="speexdsp">
+        <FILE id="t02c01" name="preprocess.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/preprocess.c"/>
+        <FILE id="t02c02" name="resample.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/resample.c"/>
+        <FILE id="t02c03" name="fftwrap.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/fftwrap.c"/>
+        <FILE id="t02c04" name="kiss_fft.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/kiss_fft.c"/>
+        <FILE id="t02c05" name="kiss_fftr.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/kiss_fftr.c"/>
+        <FILE id="t02c06" name="filterbank.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/filterbank.c"/>
+        <FILE id="t02c07" name="mdf.c" compile="1" resource="0"
+              file="../ThirdParty/speexdsp/mdf.c"/>
+      </GROUP>
+      <GROUP id="s42g1" name="rnnoise">
+       <GROUP id="s42g2" name="include">
+       <FILE id="s42i01" name="rnnoise.h" compile="0" resource="0" file="../ThirdParty/rnnoise/include/rnnoise.h"/>
+       </GROUP>
+       <GROUP id="s42g3" name="src">
+        <FILE id="s42c01" name="celt_lpc.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/celt_lpc.c"/>
+        <FILE id="s42c02" name="denoise_weights_file.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/denoise_weights_file.c"/>
+        <FILE id="s42c13" name="nnet_default_sse2.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/nnet_default_sse2.c"/>
+        <FILE id="s42c14" name="nnet_sse2.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/nnet_sse2.c"/>
+        <FILE id="s42c05" name="parse_lpcnet_weights.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/parse_lpcnet_weights.c"/>
+        <FILE id="s42c06" name="pitch.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/pitch.c"/>
+        <FILE id="s42c07" name="rnn.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/rnn.c"/>
+        <FILE id="s42c08" name="rnn_kiss_fft.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/rnn_kiss_fft.c"/>
+        <FILE id="s42c09" name="rnnoise_model_init.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/rnnoise_model_init.c"/>
+        <FILE id="s42c10" name="rnnoise_tables.c" compile="1" resource="0" file="../ThirdParty/rnnoise/src/rnnoise_tables.c"/>
+        <FILE id="s42c11" name="denoise.c" compile="0" resource="0" file="../ThirdParty/rnnoise/src/denoise.c"/>
+        <FILE id="s42c12" name="kiss_fft.c" compile="0" resource="0" file="../ThirdParty/rnnoise/src/kiss_fft.c"/>
+        <FILE id="s42c03" name="nnet.c" compile="0" resource="0" file="../ThirdParty/rnnoise/src/nnet.c"/>
+        <FILE id="s42c04" name="nnet_default.c" compile="0" resource="0" file="../ThirdParty/rnnoise/src/nnet_default.c"/>
+        <FILE id="s42h01" name="_kiss_fft_guts.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/_kiss_fft_guts.h"/>
+        <FILE id="s42h02" name="arch.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/arch.h"/>
+        <FILE id="s42h03" name="celt_lpc.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/celt_lpc.h"/>
+        <FILE id="s42h04" name="common.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/common.h"/>
+        <FILE id="s42h05" name="cpu_support.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/cpu_support.h"/>
+        <FILE id="s42h06" name="denoise.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/denoise.h"/>
+        <FILE id="s42h07" name="kiss_fft.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/kiss_fft.h"/>
+        <FILE id="s42h08" name="nnet.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/nnet.h"/>
+        <FILE id="s42h09" name="nnet_arch.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/nnet_arch.h"/>
+        <FILE id="s42h10" name="opus_types.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/opus_types.h"/>
+        <FILE id="s42h11" name="pitch.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/pitch.h"/>
+        <FILE id="s42h12" name="rnn.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/rnn.h"/>
+        <FILE id="s42h13" name="rnnoise_data.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/rnnoise_data.h"/>
+        <FILE id="s42h14" name="vec.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/vec.h"/>
+        <FILE id="s42h16" name="vec_avx.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/vec_avx.h"/>
+        <FILE id="s42h18" name="rnn_sse2.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/rnn_sse2.h"/>
+        <GROUP id="s42g4" name="x86">
+         <FILE id="s42h15" name="x86_arch_macros.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/x86/x86_arch_macros.h"/>
+         <FILE id="s42h17" name="x86cpu.h" compile="0" resource="0" file="../ThirdParty/rnnoise/src/x86/x86cpu.h"/>
+        </GROUP>
+       </GROUP>
+       <GROUP id="s42g5" name="models">
+       <FILE id="s42m01" name="rnnoise_standard.bin" compile="0" resource="1" file="../ThirdParty/rnnoise/models/rnnoise_standard.bin"/>
+       <FILE id="s42m02" name="rnnoise_light.bin" compile="0" resource="1" file="../ThirdParty/rnnoise/models/rnnoise_light.bin"/>
+       </GROUP>
+      </GROUP>
+      <GROUP id="t02d006" name="deepfilternet">
+        <GROUP id="t02d007" name="models">
+          <FILE id="t02d008" name="dfn3_standard.bin" compile="0" resource="1" file="../ThirdParty/deepfilternet/models/dfn3_standard.bin"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="s47g1" name="webrtc">
+        <GROUP id="s47g2" name="modules">
+          <GROUP id="s47g3" name="audio_processing">
+            <GROUP id="s47g4" name="ns">
+              <FILE id="s47f01" name="fast_math.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/fast_math.cc"/>
+              <FILE id="s47f02" name="histograms.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/histograms.cc"/>
+              <FILE id="s47f03" name="noise_estimator.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/noise_estimator.cc"/>
+              <FILE id="s47f04" name="noise_suppressor.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/noise_suppressor.cc"/>
+              <FILE id="s47f05" name="ns_fft.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/ns_fft.cc"/>
+              <FILE id="s47f06" name="prior_signal_model.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/prior_signal_model.cc"/>
+              <FILE id="s47f07" name="prior_signal_model_estimator.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/prior_signal_model_estimator.cc"/>
+              <FILE id="s47f08" name="quantile_noise_estimator.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/quantile_noise_estimator.cc"/>
+              <FILE id="s47f09" name="signal_model.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/signal_model.cc"/>
+              <FILE id="s47f10" name="signal_model_estimator.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/signal_model_estimator.cc"/>
+              <FILE id="s47f11" name="speech_probability_estimator.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/speech_probability_estimator.cc"/>
+              <FILE id="s47f12" name="suppression_params.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/suppression_params.cc"/>
+              <FILE id="s47f13" name="wiener_filter.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/wiener_filter.cc"/>
+              <FILE id="s47f14" name="fast_math.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/fast_math.h"/>
+              <FILE id="s47f15" name="histograms.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/histograms.h"/>
+              <FILE id="s47f16" name="noise_estimator.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/noise_estimator.h"/>
+              <FILE id="s47f17" name="noise_suppressor.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/noise_suppressor.h"/>
+              <FILE id="s47f18" name="ns_common.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/ns_common.h"/>
+              <FILE id="s47f19" name="ns_config.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/ns_config.h"/>
+              <FILE id="s47f20" name="ns_fft.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/ns_fft.h"/>
+              <FILE id="s47f21" name="prior_signal_model.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/prior_signal_model.h"/>
+              <FILE id="s47f22" name="prior_signal_model_estimator.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/prior_signal_model_estimator.h"/>
+              <FILE id="s47f23" name="quantile_noise_estimator.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/quantile_noise_estimator.h"/>
+              <FILE id="s47f24" name="signal_model.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/signal_model.h"/>
+              <FILE id="s47f25" name="signal_model_estimator.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/signal_model_estimator.h"/>
+              <FILE id="s47f26" name="speech_probability_estimator.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/speech_probability_estimator.h"/>
+              <FILE id="s47f27" name="suppression_params.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/suppression_params.h"/>
+              <FILE id="s47f28" name="wiener_filter.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/ns/wiener_filter.h"/>
+            </GROUP>
+            <FILE id="s47f29" name="three_band_filter_bank.cc" compile="1" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/three_band_filter_bank.cc"/>
+            <FILE id="s47f30" name="three_band_filter_bank.h" compile="0" resource="0" file="../ThirdParty/webrtc/modules/audio_processing/three_band_filter_bank.h"/>
+          </GROUP>
+        </GROUP>
+        <GROUP id="s47g5" name="common_audio">
+          <GROUP id="s47g6" name="ooura">
+            <FILE id="s47f31" name="fft4g.cc" compile="1" resource="0" file="../ThirdParty/webrtc/common_audio/third_party/ooura/fft_size_256/fft4g.cc"/>
+            <FILE id="s47f32" name="fft4g.h" compile="0" resource="0" file="../ThirdParty/webrtc/common_audio/third_party/ooura/fft_size_256/fft4g.h"/>
+          </GROUP>
+        </GROUP>
+        <GROUP id="s47g7" name="shim">
+          <FILE id="s47f33" name="checks.h" compile="0" resource="0" file="../ThirdParty/webrtc/shim/rtc_base/checks.h"/>
+          <FILE id="s47f34" name="audio_buffer.h" compile="0" resource="0" file="../ThirdParty/webrtc/shim/modules/audio_processing/audio_buffer.h"/>
+        </GROUP>
+      </GROUP>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors_headless" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2026 targetFolder="Builds/VisualStudio2026">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="NoiseSuppressionTests"
+                       headerPath="../../../ThirdParty/speexdsp&#10;../../../Source&#10;../../../ThirdParty/rnnoise/include&#10;../../../ThirdParty/webrtc&#10;../../../ThirdParty/webrtc/shim&#10;../../../../_upstream/rnnoise/src"
+                       defines="NSP_TESTS=1&#10;FLOATING_POINT&#10;USE_KISS_FFT&#10;_USE_MATH_DEFINES"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="NoiseSuppressionTests"
+                       headerPath="../../../ThirdParty/speexdsp&#10;../../../Source&#10;../../../ThirdParty/rnnoise/include&#10;../../../ThirdParty/webrtc&#10;../../../ThirdParty/webrtc/shim&#10;../../../../_upstream/rnnoise/src"
+                       defines="NSP_TESTS=1&#10;FLOATING_POINT&#10;USE_KISS_FFT&#10;_USE_MATH_DEFINES"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_audio_processors_headless" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_core" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_events" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_graphics" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:/JUCE9/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:/JUCE9/modules"/>
+      </MODULEPATHS>
+    </VS2026>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

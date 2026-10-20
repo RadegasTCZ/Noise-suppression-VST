@@ -1,0 +1,12 @@
+* text=auto
+
+# Binary files: never convert line endings or diff as text
+*.bin binary
+*.png binary
+*.wav binary
+*.jpg binary
+*.ico binary
+*.zip binary
+
+# cmd.exe batch files need CRLF
+*.bat text eol=crlf

@@ -33,7 +33,6 @@
    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
 */
-#define SPEEX_PREPROCESS_GET_FRAME_SIZE 3
 
 #ifndef SPEEX_PREPROCESS_H
 #define SPEEX_PREPROCESS_H
@@ -69,6 +68,12 @@ SpeexPreprocessState *speex_preprocess_state_init(int frame_size, int sampling_r
  * @param st Preprocessor state to destroy
 */
 void speex_preprocess_state_destroy(SpeexPreprocessState *st);
+
+/** nsp local patch: resets the adaptive state of a preprocessor state to what
+ *  speex_preprocess_state_init() produces, without allocating. Parameters are kept.
+ * @param st Preprocessor state to reset
+*/
+void speex_preprocess_state_reset(SpeexPreprocessState *st);
 
 /** Preprocess a frame
  * @param st Preprocessor state

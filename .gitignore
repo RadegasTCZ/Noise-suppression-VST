@@ -44,7 +44,7 @@ JuceLibraryCode/
 *.bak
 *.tmp
 *.old
-*.vs
+.vs/
 
 # Xcode project user data
 *.xcworkspace
@@ -55,14 +55,13 @@ JuceLibraryCode/
 # Projucer auto-generated files
 *.jucer~
 
-# Ignore compiled plugin binaries (all formats)
-*.vst3
-*.dll
-*.vst
-*.dylib
-*.component
-
 # Miscellaneous
 ipch/
 .DS_Store
 *.orig
+
+# Listening renders written by the test app (--render)
+Tests/render/
+
+# Python venv of the DFN blob tool
+Tools/DfnBlobTool/.venv/

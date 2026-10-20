@@ -1,8 +1,30 @@
 This project is licensed under the GNU General Public License, version 3.
 See below for the full license text.
 
-Third-party code in 'ThirdParty/speexdsp/' is © Xiph.Org Foundation and licensed under the BSD-3-Clause license.
-See ThirdParty/speexdsp/COPYING for details.
+Third-party components (each under its own license; see ThirdParty/UPSTREAM.md for provenance):
+- SpeexDSP, 'ThirdParty/speexdsp/': (c) Xiph.Org Foundation and contributors, BSD-3-Clause.
+  See ThirdParty/speexdsp/COPYING.
+- RNNoise code and model 0a8755f8, 'ThirdParty/rnnoise/': (c) Jean-Marc Valin, Mozilla, Amazon and
+  contributors, BSD-3-Clause. See ThirdParty/rnnoise/COPYING.
+- WebRTC noise suppressor and three-band filter bank, 'ThirdParty/webrtc/': (c) The WebRTC project
+  authors, BSD-3-Clause plus the WebRTC patent grant. See ThirdParty/webrtc/LICENSE and
+  ThirdParty/webrtc/PATENTS.
+- Ooura FFT, 'ThirdParty/webrtc/common_audio/third_party/ooura/': (c) Takuya Ooura, see
+  ThirdParty/webrtc/common_audio/third_party/ooura/LICENSE.
+- SNS engine ('Source/Engines/sns/HybridDenoise.cpp'): compute_band_energy() and interp_band_gain()
+  are adapted from RNNoise src/denoise.c, BSD-3-Clause, see ThirdParty/rnnoise/COPYING. The noise
+  estimation is adapted from SpeexDSP libspeexdsp/preprocess.c, Copyright (C) 2003 Epic Games (written
+  by Jean-Marc Valin), 2004-2006 Epic Games, BSD-3-Clause, see the header of
+  ThirdParty/speexdsp/preprocess.c.
+- DeepFilterNet3 port ('Source/Engines/dfn/') and weights ('ThirdParty/deepfilternet/'): Copyright (c) 2021
+  Hendrik Schröter, MIT OR Apache-2.0 (used here under MIT), see ThirdParty/deepfilternet/LICENSE,
+  LICENSE-MIT and LICENSE-APACHE. The weights have no separate licence file; the basis for redistributing
+  them is described in ThirdParty/deepfilternet/README.md.
+- JUCE (not included in this repository) is used under the GNU Affero General Public License,
+  version 3. Plugin binaries combine this project's GPLv3 code with AGPLv3 JUCE code (GPLv3 section 13);
+  the AGPLv3 applies to the combined binary as a whole.
+- The VST3 SDK (part of JUCE, not included in this repository): (c) Steinberg Media Technologies GmbH,
+  MIT licence.
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
